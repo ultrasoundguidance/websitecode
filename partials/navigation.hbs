@@ -1,46 +1,38 @@
 {{#unless isSecondary}}
 <ul class="flex items-center align-text-top hidden space-x-8 lg:-mt-6 lg:flex">
-<li>
-	<a href="/" aria-label="About Ultrasound Guidance" title="About Ultrasound Guidance" class="lnk">About</a>
-</li>
-<li>
-	<a href="/" aria-label="Our product" title="Our product" class="lnk">Features</a>
-</li>
-<li>
-	<a href="/" aria-label="Product pricing" title="Product pricing" class="lnk">Pricing</a>
-</li>
-<li>
-	<a href="#/portal/" class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none btn" aria-label="Sign up" title="Sign up">Sign up</a>
-</li>
-<li>
-	<button
-	  @click="darkMode = !darkMode"
-	  :aria-checked="darkMode"
-	  :class="{'bg-gray-700': darkMode, 'bg-gray-200': !darkMode }"
-	  type="button"
-	  class="mx-0 self-center relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-900 hover:shadow"
-	  role="switch">
-	  <span class="sr-only">Enable light mode</span>
-	  <span
-		:class="{'translate-x-0': darkMode, 'translate-x-5': !darkMode }"
-		class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200">
-		<span
-		  :class="{'opacity-100 ease-in duration-200 text-primary-900': darkMode, 'opacity-0 ease-out duration-100': !darkMode }"
-		  class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
-		  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-			<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-		  </svg>
-		</span>
-		<span
-		  :class="{'opacity-0 ease-out duration-100': darkMode, 'opacity-100 ease-in duration-200 text-primary-900': !darkMode }"
-		  class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
-		  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-			<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
-		  </svg>
-		</span>
-	  </span>
-	</button>
-</li>
+	{{#foreach navigation}}
+		<li>
+			<a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="lnk">{{label}}</a>
+		</li>
+	{{/foreach}}
+	<!-- Membership -->
+	<li>
+		{{#if @member}}
+			<a href="#/portal/account" class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none btn" aria-label="My account" title="My account">My account</a>
+		{{else}}
+			<a href="#/portal/" class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none btn" aria-label="Sign up" title="Sign up">Sign up</a>
+		{{/if}}
+	</li>
+	<!-- End membership -->
+	<!-- Mode switch -->
+	<li>
+		<button @click="darkMode = !darkMode" :aria-checked="darkMode" :class="{'bg-gray-700': darkMode, 'bg-gray-200': !darkMode }" type="button" class="mx-0 self-center relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-900 hover:shadow" role="switch">
+		  <span class="sr-only">Enable light mode</span>
+		  <span :class="{'translate-x-0': darkMode, 'translate-x-5': !darkMode }" class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200">
+			<span :class="{'opacity-100 ease-in duration-200 text-primary-900': darkMode, 'opacity-0 ease-out duration-100': !darkMode }" class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
+			  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+				<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+			  </svg>
+			</span>
+			<span :class="{'opacity-0 ease-out duration-100': darkMode, 'opacity-100 ease-in duration-200 text-primary-900': !darkMode }" class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
+			  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
+			  </svg>
+			</span>
+		  </span>
+		</button>
+	</li>
+	<!-- END mode switch -->
 </ul>
 <!-- Mobile menu -->
 <div class="lg:hidden">
@@ -92,63 +84,16 @@
 <!-- end mobile menu -->
 
 {{else}}
-<div class="grid grid-cols-2 gap-5 row-gap-8 md:grid-cols-4 lg:col-span-4">
-	<div>
-		<p class="font-medium tracking-wide text-gray-300">Category</p>
-		<ul class="mt-2 space-y-2">
-			<li>
-				<a href="/" class="lnk foot-lnk">Lorem</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Ipsum</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Dolor</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Sit amet</a>
-			</li>
-		</ul>
+	<div class="grid grid-cols-2 gap-5 row-gap-8 md:grid-cols-4 lg:col-span-4">
+		<div>
+			<p class="font-medium tracking-wide text-gray-300">Category</p>
+			<ul class="mt-2 space-y-2">
+				{{#foreach navigation}}
+				<li>
+					<a href="{{url absolute="true"}}" class="lnk foot-lnk">{{label}}</a>
+				</li>
+				{{/foreach}}
+			</ul>
+		</div>
 	</div>
-	<div>
-		<p class="font-medium tracking-wide text-gray-300">Category</p>
-		<ul class="mt-2 space-y-2">
-			<li>
-				<a href="/" class="lnk foot-lnk">Dolor</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Lorem</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Untiusque</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Sit amet</a>
-			</li>
-			<li>
-				<a href="/" class="lnk foot-lnk">Ipsum</a>
-			</li>
-		</ul>
-	</div>
-	<div>
-		<p class="font-medium tracking-wide text-gray-300">Category</p>
-		<ul class="mt-2 space-y-2">
-			<li>
-				  <a href="/" class="lnk foot-lnk">Subterfuge</a>
-			</li>
-			<li>
-				  <a href="/" class="lnk foot-lnk">Aimless</a>
-			</li>
-			<li>
-				  <a href="/" class="lnk foot-lnk">Qualms</a>
-			</li>
-			<li>
-				  <a href="/" class="lnk foot-lnk">Constant</a>
-			</li>
-			<li>
-				  <a href="/" class="lnk foot-lnk">Marrow</a>
-			</li>
-		</ul>
-	</div>
-</div>
 {{/unless}}
