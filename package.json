@@ -38,5 +38,8 @@
     "postcss-color-mod-function": "^3.0.3",
     "postcss-easy-import": "^3.0.0",
     "pump": "^3.0.0"
+  },
+  "config": {
+    "posts_per_page": 25
   }
 }
