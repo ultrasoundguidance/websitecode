@@ -42,52 +42,66 @@
 	</div>
 	<!-- END section decorator -->
 		
-	<!-- single feature -->
+	<!-- features container -->
 	<div class="grid max-w-screen-lg gap-8 row-gap-10 mx-auto lg:grid-cols-2">
-		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-			{{> "svg-circle-lightning"}}
-		<div>
-			<h6 class="mb-3 text-xl font-bold leading-5">The deep ocean</h6>
-			<p class="mb-3 text-sm">
-				Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae excepturi iure, enim, facilis laborum totam consequatur quam exercitationem animi obcaecati quod accusantium ipsa fugit.
-			</p>
-			<a href="/" aria-label="" class="lnk">Learn more</a>
-		</div>
-	</div>
-	<!-- END single feature -->
 		
-	<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-	  	{{> "svg-circle-lightning"}}
-		<div>
-			<h6 class="mb-3 text-xl font-bold leading-5">When has justice</h6>
-			<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
-				Rough pomfret lemon shark plownose chimaera southern sandfish kokanee northern sea robin Antarctic cod. Yellow-and-black triplefin gulper South American Lungfish mahi-mahi, butterflyfish glass catfish soapfish ling gray mullet!
-			</p>
-			<a href="/" aria-label="" class="lnk">Learn more</a>
-		</div>
-	</div>
+		<!-- single feature -->
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
 			{{> "svg-circle-lightning"}}
 			<div>
-			<h6 class="mb-3 text-xl font-bold leading-5">Organically grow</h6>
-			<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
-			  A slice of heaven. O for awesome, this chocka full cuzzie is as rip-off as a cracker. Meanwhile, in behind the bicycle shed, Hercules Morse, as big as a horse and Mrs Falani were up to no good with a bunch of crook pikelets.
-			</p>
-			<a href="/" aria-label="" class="lnk">Learn more</a>
-		  </div>
+				<h6 class="mb-3 text-xl font-bold leading-5">The deep ocean</h6>
+				<p class="mb-3 text-sm">
+					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae excepturi iure, enim, facilis laborum totam consequatur quam exercitationem animi obcaecati quod accusantium ipsa fugit.
+				</p>
+				<a href="/" aria-label="" class="lnk">Learn more</a>
+			</div>
 		</div>
+		<!-- END single feature -->
+	
+		<!-- single feature -->
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
 		  	{{> "svg-circle-lightning"}}
-		  	<div>
-			<h6 class="mb-3 text-xl font-bold leading-5">A slice of heaven</h6>
-			<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
-			  Disrupt inspire and think tank, social entrepreneur but preliminary thinking think tank compelling. Inspiring, invest synergy capacity building, white paper; silo, unprecedented challenge B-corp problem-solvers.
-			</p>
-			<a href="/" aria-label="" class="lnk">Learn more</a>
-		  </div>
+			<div>
+				<h6 class="mb-3 text-xl font-bold leading-5">When has justice</h6>
+				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
+					Rough pomfret lemon shark plownose chimaera southern sandfish kokanee northern sea robin Antarctic cod. Yellow-and-black triplefin gulper South American Lungfish mahi-mahi, butterflyfish glass catfish soapfish ling gray mullet!
+				</p>
+				<a href="/" aria-label="" class="lnk">Learn more</a>
+			</div>
 		</div>
-	  </div>
+		<!-- END single feature -->
+	
+		<!-- single feature -->
+		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
+			{{> "svg-circle-lightning"}}
+			<div>
+				<h6 class="mb-3 text-xl font-bold leading-5">Organically grow</h6>
+				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
+					A slice of heaven. O for awesome, this chocka full cuzzie is as rip-off as a cracker. Meanwhile, in behind the bicycle shed, Hercules Morse, as big as a horse and Mrs Falani were up to no good with a bunch of crook pikelets.
+				</p>
+				<a href="/" aria-label="" class="lnk">Learn more</a>
+			</div>
+		</div>
+		<!-- END single feature -->
+		
+		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
+			{{> "svg-circle-lightning"}}
+			<div>
+				<h6 class="mb-3 text-xl font-bold leading-5">A slice of heaven</h6>
+				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
+					Disrupt inspire and think tank, social entrepreneur but preliminary thinking think tank compelling. Inspiring, invest synergy capacity building, white paper; silo, unprecedented challenge B-corp problem-solvers.
+				</p>
+				<a href="/" aria-label="" class="lnk">Learn more</a>
+			</div>
+	
+		</div>
+		<!-- END single feature -->
+
 	</div>
+	<!-- END features container -->
+
+</div>
+<!-- END features -->
 
 <!-- pricing -->
 <div class="relative w-full h-full bg-gray-100 dark:bg-gray-700">
@@ -114,7 +128,7 @@
 		    	<div>
 					<div class="p-8 bg-gray-900 rounded">
 						<div class="mb-4 text-center">
-							<p class="text-xl font-medium tracking-wide text-gray-100">Starter Plan</p>
+							<p class="text-xl font-medium tracking-wide text-gray-100">Monthly Plan</p>
 							<div class="flex items-center justify-center">
 								<p class="mr-2 text-5xl font-semibold text-white lg:text-6xl">${{@price.monthly}}</p>
 								<p class="text-lg text-gray-400">/ month</p>
@@ -145,7 +159,7 @@
 			<div class="">
 				<div class="p-8 bg-gray-900 rounded">
 					<div class="mb-4 text-center">
-						<p class="text-xl font-medium tracking-wide text-gray-100">Pro Plan</p>
+						<p class="text-xl font-medium tracking-wide text-gray-100">Annual Plan</p>
 						<div class="flex items-center justify-center">
 							<p class="mr-2 text-5xl font-semibold text-white lg:text-6xl">${{@price.yearly}}</p>
 							<p class="text-lg text-gray-400">/ year</p>
