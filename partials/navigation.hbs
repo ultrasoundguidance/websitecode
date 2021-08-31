@@ -1,10 +1,16 @@
 {{#unless isSecondary}}
 <ul class="flex items-center align-text-top hidden space-x-8 lg:-mt-6 lg:flex">
+	{{#unless @member}}
 	{{#foreach navigation}}
 		<li>
 			<a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="lnk">{{label}}</a>
 		</li>
 	{{/foreach}}
+	{{else}}
+		<li>
+			<a href="./lessons/" aria-label="lessons" title="lessons" class="lnk">Lessons</a>
+		</li>
+	{{/unless}}
 	<!-- Membership -->
 	<li>
 		{{#if @member}}
