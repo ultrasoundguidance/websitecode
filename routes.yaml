@@ -3,7 +3,7 @@ routes:
   
 collections:
   /lessons/:
-    permalink: /{slug}/
+    permalink: /lessons/{slug}/
     template: index
 
 taxonomies:
