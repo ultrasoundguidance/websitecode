@@ -13,6 +13,7 @@ const fs = require('fs');
 
 // postcss plugins
 const autoprefixer = require('autoprefixer');
+const tailwind = require('tailwindcss');
 const colorFunction = require('postcss-color-mod-function');
 const cssnano = require('cssnano');
 const easyimport = require('postcss-easy-import');
@@ -44,6 +45,7 @@ function css(done) {
 		postcss([
 			easyimport,
 			colorFunction(),
+			tailwind({ config: './tailwind.config.js' }),
 			autoprefixer(),
 			cssnano()
 		]),
