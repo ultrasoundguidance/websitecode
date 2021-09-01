@@ -1,4 +1,7 @@
 {
   "workspace.color" : 2,
-  "workspace.name" : "Sonar"
+  "workspace.name" : "Sonar",
+  "workspace.preview_append_paths" : false,
+  "workspace.preview_type" : "custom",
+  "workspace.preview_url" : "http:\/\/localhost:2368\/"
 }

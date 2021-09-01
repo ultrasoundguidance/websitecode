@@ -2,8 +2,8 @@ routes:
   /: home
   
 collections:
-  /lessons/:
-    permalink: /lessons/{slug}/
+  /videos/:
+    permalink: /videos/{slug}/
     template: index
 
 taxonomies:

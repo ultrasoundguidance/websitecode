@@ -8,7 +8,7 @@
 				<p class="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-primary-600 uppercase rounded-full bg-accent-400 dark:bg-primary-800 dark:text-accent-400">New Collaboration</p>
 			</div>
 			<h2 class="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">
-				The quick, brown fox<br class="hidden md:block" />jumps over <span class="inline-block hiliter">a lazy dog</span>
+				The quick brown fox<br class="hidden md:block" />jumps over <span class="inline-block hiliter">a lazy dog</span>
 			</h2>
 			<p class="text-base md:text-lg">
 			  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum at quam expedita omnis? Repellat doloremque consequuntur voluptates, quas quod amet temporibus deserunt quidem modi, exercitationem sequi velit, saepe nobis odit!
@@ -27,27 +27,13 @@
 
 <!-- features -->
 <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8 lg:py-20">
-	<!-- section decorator -->
-	<div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
-		<span class="relative inline-block">
-			<svg viewBox="0 0 52 24" fill="currentColor" class="absolute top-0 left-0 z-0 hidden w-32 -mt-8 -ml-20 text-gray-400 lg:w-32 lg:-ml-28 lg:-mt-10 sm:block">
-				<defs>
-					<pattern id="27df4f81-c854-45de-942a-fe90f7a300f9" x="0" y="0" width=".135" height=".30">
-						<circle cx="1" cy="1" r=".7"></circle>
-					</pattern>
-				</defs>
-				<rect fill="url(#27df4f81-c854-45de-942a-fe90f7a300f9)" width="52" height="24"></rect>
-			</svg>
-		</span>
-	</div>
-	<!-- END section decorator -->
-		
+	{{> "decorators/svg-centered-section"}}		
 	<!-- features container -->
 	<div class="grid max-w-screen-lg gap-8 row-gap-10 mx-auto lg:grid-cols-2">
 		
 		<!-- single feature -->
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-			{{> "svg-circle-lightning"}}
+			{{> "decorators/svg-circle-lightning"}}
 			<div>
 				<h6 class="mb-3 text-xl font-bold leading-5">The deep ocean</h6>
 				<p class="mb-3 text-sm">
@@ -60,7 +46,7 @@
 	
 		<!-- single feature -->
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-		  	{{> "svg-circle-lightning"}}
+		  	{{> "decorators/svg-circle-lightning"}}
 			<div>
 				<h6 class="mb-3 text-xl font-bold leading-5">When has justice</h6>
 				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
@@ -73,7 +59,7 @@
 	
 		<!-- single feature -->
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-			{{> "svg-circle-lightning"}}
+			{{> "decorators/svg-circle-lightning"}}
 			<div>
 				<h6 class="mb-3 text-xl font-bold leading-5">Organically grow</h6>
 				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
@@ -85,7 +71,7 @@
 		<!-- END single feature -->
 		
 		<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-			{{> "svg-circle-lightning"}}
+			{{> "decorators/svg-circle-lightning"}}
 			<div>
 				<h6 class="mb-3 text-xl font-bold leading-5">A slice of heaven</h6>
 				<p class="mb-3 text-sm text-gray-900 dark:text-gray-200">
@@ -136,25 +122,25 @@
 						</div>
 						<ul class="mb-8 space-y-2">
 							<li class="flex items-center">
-								{{> "svg-circle-arrow"}}
+								{{> "decorators/svg-circle-arrow"}}
 								<p class="font-medium text-gray-300">10 lorem</p>
 							</li>
 							<li class="flex items-center">
-				  		  		{{> "svg-circle-arrow"}}
+				  		  		{{> "decorators/svg-circle-arrow"}}
 								<p class="font-medium text-gray-300">10 ipsum</p>
 							</li>
 							<li class="flex items-center">
-								{{> "svg-circle-arrow"}}
+								{{> "decorators/svg-circle-arrow"}}
 								<p class="font-medium text-gray-300">3 dolor sit</p>
 							</li>
 							<li class="flex items-center">
-								{{> "svg-circle-arrow"}}
+								{{> "decorators/svg-circle-arrow"}}
 								<p class="font-medium text-gray-300">Amet</p>
 							</li>
 						</ul>
 						<button type="submit" class="inline-flex items-center justify-center w-full h-12 px-6 font-semibold tracking-wide bg-primary-900 text-accent-400 transition duration-200 rounded shadow-md hover:bg-accent-400 hover:text-primary-900 hover:shadow-none focus:shadow-outline focus:outline-none">Get Now</button>
 					</div>
-				{{> "svg-shadow-box"}}
+				{{> "decorators/svg-shadow-box"}}
 			</div>
 			<div class="">
 				<div class="p-8 bg-gray-900 rounded">
@@ -167,25 +153,25 @@
 					</div>
 					<ul class="mb-8 space-y-2">
 						<li class="flex items-center">
-							{{> "svg-circle-arrow"}}
+							{{> "decorators/svg-circle-arrow"}}
 							<p class="font-medium text-gray-300">10 lorem</p>
 						</li>
 						<li class="flex items-center">
-							{{> "svg-circle-arrow"}}
+							{{> "decorators/svg-circle-arrow"}}
 							<p class="font-medium text-gray-300">50 ipsum</p>
 						</li>
 						<li class="flex items-center">
-							{{> "svg-circle-arrow"}}
+							{{> "decorators/svg-circle-arrow"}}
 							<p class="font-medium text-gray-300">Dolor</p>
 						</li>
 						<li class="flex items-center">
-							{{> "svg-circle-arrow"}}
+							{{> "decorators/svg-circle-arrow"}}
 							<p class="font-medium text-gray-300">Sit amet</p>
 						</li>
 					</ul>
 					<button type="submit" class="inline-flex items-center justify-center w-full h-12 px-6 font-semibold tracking-wide transition duration-200 rounded shadow-md bg-accent-400 text-primary-900 hover:bg-tertiary-400 hover:text-primary-900 hover:shadow-none focus:shadow-outline focus:outline-none">Get Now</button>
 				</div>
-			{{> "svg-shadow-box"}}
+			{{> "decorators/svg-shadow-box"}}
 			</div>
 		</div>
 	</div>
