@@ -2341,6 +2341,11 @@ select {
   color: rgba(229, 231, 235, var(--tw-text-opacity));
 }
 
+.dark .dark\:text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgba(75, 85, 99, var(--tw-text-opacity));
+}
+
 .dark .dark\:text-accent-400 {
   --tw-text-opacity: 1;
   color: rgba(114, 239, 221, var(--tw-text-opacity));
