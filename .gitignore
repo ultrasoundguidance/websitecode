@@ -150,11 +150,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# Ghost
-content/
-current/
-versions/
-.ghost-cli
-config.development.json
-.node-version
 # End of https://www.toptal.com/developers/gitignore/api/node,macos
