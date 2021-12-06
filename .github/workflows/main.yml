@@ -1,0 +1,15 @@
+name: Deploy Theme
+on:
+  push:
+    branches:
+      - master
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+      - uses: TryGhost/action-deploy-theme@v1.4.1
+        with:
+          api-url: ${{ https://ultrasoundguidance.ghost.io }}
+          api-key: ${{ 618c6cea1fdd54003bcb1586:63d76a5d49407eeb8baf26810a2d9dc334464b93a1a536b055f3f35fd56dc8e8 }}
