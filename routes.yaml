@@ -1,5 +1,7 @@
 routes:
-  /: coming-soon
+  /: 
+    template: coming-soon
+    data: page.coming-soon
   
 collections:
   /videos/:
