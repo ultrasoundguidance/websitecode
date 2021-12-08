@@ -6,7 +6,7 @@
     },
     "run" : {
       "enabled" : true,
-      "script" : "npm run dev"
+      "script" : "npm run test"
     }
   },
   "identifier" : "1B88724E-82C2-4CE1-A25B-B04AB2A326EA",
