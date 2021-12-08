@@ -12,7 +12,9 @@
 				<span class="block text-base text-center font-semibold tracking-wide uppercase"></span>
 				<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{title}}</span>
 			</h1>
-			<p class="mt-8 text-xl leading-8">{{excerpt}}</p>
+			{{#if custom_excerpt }}
+				<p class="mt-8 text-xl leading-8">{{excerpt}}</p>
+			{{/if}}
 		</div>
 		
 		<!-- post body -->
