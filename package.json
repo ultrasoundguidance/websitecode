@@ -23,9 +23,11 @@
     "ghost-theme"
   ],
   "devDependencies": {
-    "@tailwindcss/forms": "^0.3.3",
-    "@tailwindcss/typography": "^0.4.1",
-    "autoprefixer": "^10.3.3",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "@tailwindcss/line-clamp": "^0.3.0",
+    "@tailwindcss/typography": "^0.5.0",
+    "autoprefixer": "^10.4.0",
     "beeper": "^3.0.0",
     "cssnano": "^5.0.8",
     "gscan": "^4.2.1",
@@ -36,11 +38,11 @@
     "gulp-uglify": "^3.0.2",
     "gulp-zip": "^5.1.0",
     "inquirer": "^8.1.2",
-    "postcss": "^8.3.6",
+    "postcss": "^8.4.4",
     "postcss-color-mod-function": "^3.0.3",
     "postcss-easy-import": "^3.0.0",
     "pump": "^3.0.0",
-    "tailwindcss": "^2.2.9"
+    "tailwindcss": "^3.0.0"
   },
   "config": {
     "posts_per_page": 25
