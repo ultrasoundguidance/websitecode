@@ -1,11 +1,12 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: {
-	enabled: true,
-	content: ['./**/*.html', './**/*.php', './**/*.hbs', './**/*.js'],
-  },
-  darkMode: 'class', // or 'media' or 'class'
+plugins: [
+	require('@tailwindcss/typography'),
+	require('@tailwindcss/forms'),
+  ],
+  content: ['./*.hbs', './partials/**/*.hbs'],
+  darkMode: 'class',
   theme: {
 	fontFamily: {
 	  sans: ['Sk-Modernist-Light'],
@@ -67,13 +68,4 @@ module.exports = {
 	  },
 	},
   },
-  variants: {
-	extend: {
-	  fontWeight: ['dark', 'hover']
-	},
-  },
-  plugins: [
-	require('@tailwindcss/typography'),
-	require('@tailwindcss/forms'),
-  ],
 }
