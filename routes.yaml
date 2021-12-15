@@ -3,11 +3,3 @@ routes:
     template: coming-soon
     data: page.coming-soon
   
-collections:
-  /videos/:
-    permalink: /videos/{slug}/
-    template: index
-
-taxonomies:
-  tag: /tag/{slug}/
-  author: /author/{slug}/
