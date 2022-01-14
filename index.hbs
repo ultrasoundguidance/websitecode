@@ -1,18 +1,22 @@
 {{!< default}}
-<!-- enable #if @member.paid to gate all content on this page -->
-<div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">	
-	{{#is "videos"}}
+<div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
 	<div class="text-lg max-w-prose mx-auto">
 		<h1>
-			<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
-			<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Videos</span>
+			{{#is "videos"}}
+				<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
+				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Videos</span>
+			{{/is}}
+			{{#is "tag"}}
+				<span class="block text-base text-center font-semibold tracking-wide uppercase">Videos Tagged</span>
+				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{tag.name}}</span>
+			{{/is}}
 		</h1>
 	</div>
-	{{/is}}
 
 	<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
 		{{#foreach posts}}
-		
+{{#if visibility}}
+
 		<div class="overflow-hidden transition-shadow duration-300 rounded">
 			<a href="{{url}}" aria-label="{{title}}"><img src="https://images.pexels.com/photos/932638/pexels-photo-932638.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260" class="object-cover w-full h-64 rounded" alt="{{title}}" /></a>
 			<div class="py-5">
@@ -29,7 +33,33 @@
 				</p>
 			</div>
 		</div>
+{{/if}}
 		{{/foreach}}
 	</div>
 </div>
 <!-- /if -->
+
+{{^if @member.paid}}
+<!-- page container -->
+<div class="relative pt-6 pb-16 lg:pt-0 overflow-hidden">
+	{{> "decorators/svg-post"}}
+
+	<!-- post container -->
+	<div class="relative px-4 sm:px-6 lg:px-8">
+		{{#post}}
+		<!-- post header -->
+		<div class="text-lg max-w-prose mx-auto">
+			<h1>
+				<span class="block text-base text-center font-semibold tracking-wide uppercase"></span>
+				<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{title}}</span>
+			</h1>
+		</div>
+
+		<!-- post body -->
+		<div class="mt-6 prose prose-lg mx-auto gh-content">
+			{{content}}
+		</div>
+		{{/post}}
+	</div>
+</div>
+{{/if}}

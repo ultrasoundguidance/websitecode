@@ -1,8 +1,8 @@
 {{!< default}}
 <!-- page container -->
 <div class="relative pt-6 pb-16 lg:pt-0 overflow-hidden">
-	{{> "decorators/svg-post"}}	
-	
+	{{> "decorators/svg-post"}}
+
 	<!-- post container -->
 	<div class="relative px-4 sm:px-6 lg:px-8">
 		{{#post}}
@@ -12,11 +12,8 @@
 				<span class="block text-base text-center font-semibold tracking-wide uppercase"></span>
 				<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{title}}</span>
 			</h1>
-			{{#if custom_excerpt }}
-				<p class="mt-8 text-xl leading-8">{{excerpt}}</p>
-			{{/if}}
 		</div>
-		
+
 		<!-- post body -->
 		<div class="mt-6 prose prose-lg mx-auto gh-content">
 			{{content}}
