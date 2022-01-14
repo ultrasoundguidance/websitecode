@@ -1,4 +1,5 @@
 {{!< default}}
+{{#if @member.paid}}
 <div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
 	<div class="text-lg max-w-prose mx-auto">
 		<h1>
@@ -15,8 +16,7 @@
 
 	<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
 		{{#foreach posts}}
-{{#if visibility}}
-
+		{{#if visibility}}
 		<div class="overflow-hidden transition-shadow duration-300 rounded">
 			<a href="{{url}}" aria-label="{{title}}"><img src="https://images.pexels.com/photos/932638/pexels-photo-932638.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260" class="object-cover w-full h-64 rounded" alt="{{title}}" /></a>
 			<div class="py-5">
@@ -33,33 +33,49 @@
 				</p>
 			</div>
 		</div>
-{{/if}}
+		{{/if}}
 		{{/foreach}}
 	</div>
 </div>
-<!-- /if -->
 
-{{^if @member.paid}}
-<!-- page container -->
+{{else}}
 <div class="relative pt-6 pb-16 lg:pt-0 overflow-hidden">
-	{{> "decorators/svg-post"}}
-
+	<!-- post decorators -->
+<div class="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
+	<div class="relative h-full text-lg max-w-prose mx-auto" aria-hidden="true">
+		<svg class="absolute top-12 left-full transform translate-x-32" width="404" height="384" fill="none" viewBox="0 0 404 384">
+			<defs>
+				<pattern id="74b3fd99-0a6f-4271-bef2-e80eeafdf357" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+					<rect x="0" y="0" width="4" height="4" class="text-gray-200 dark:text-gray-600" fill="currentColor" />
+				</pattern>
+			</defs>
+			<rect width="404" height="384" fill="url(#74b3fd99-0a6f-4271-bef2-e80eeafdf357)" />
+		</svg>
+		<svg class="absolute top-1/2 right-full transform -translate-y-1/2 -translate-x-32" width="404" height="384" fill="none" viewBox="0 0 404 384">
+			<defs>
+				<pattern id="f210dbf6-a58d-4871-961e-36d5016a0f49" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+					<rect x="0" y="0" width="4" height="4" class="text-gray-200 dark:text-gray-600" fill="currentColor" />
+				</pattern>
+			</defs>
+			<rect width="404" height="384" fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)" />
+		</svg>
+	</div>
+</div>
+<!-- END post decorator -->
 	<!-- post container -->
 	<div class="relative px-4 sm:px-6 lg:px-8">
-		{{#post}}
 		<!-- post header -->
 		<div class="text-lg max-w-prose mx-auto">
 			<h1>
 				<span class="block text-base text-center font-semibold tracking-wide uppercase"></span>
-				<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{title}}</span>
+				<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Plans and pricing</span>
 			</h1>
 		</div>
 
 		<!-- post body -->
 		<div class="mt-6 prose prose-lg mx-auto gh-content">
-			{{content}}
+			<h2 id="the-complete-package">The Complete Package</h2><figure class="kg-card kg-image-card"><img src="http://localhost:2368/content/images/2021/11/Shoulder-Quick-Scan-high.gif" class="kg-image" alt loading="lazy" width="783" height="391"></figure><h3 id="179-129-trainee-billed-yearly">$179 / $129 trainee (billed yearly)</h3><p>Our complete package includes access to all videos including ultrasound basics, nerve scans, spasticity scans, and musculoskeletal scans. This package is a great option for musculoskeletal practitioners, general physiatrists, sports medicine physicians, and trainees looking for a broad exposure to musculoskeletal and neuromuscular ultrasound.</p><h2 id="the-spasticity-package">The Spasticity Package</h2><figure class="kg-card kg-image-card"><img src="http://localhost:2368/content/images/2021/11/Upper-Extremity-Spasticity-Scan-high.gif" class="kg-image" alt loading="lazy" width="783" height="391"></figure><h3 id="79-49-trainee-billed-yearly">$79 / $49 trainee (billed yearly)</h3><p>Our spasticity package includes access to ultrasound basics, nerve scans, and spasticity scans and does not include any musculoskeletal scans. This package is great for anyone interested in using ultrasound in their interventional spasticity practice and aims to help you learn how to identify the nerves and muscles most commonly targeted for chemodenervation.</p>
 		</div>
-		{{/post}}
 	</div>
 </div>
 {{/if}}
