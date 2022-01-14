@@ -16,7 +16,7 @@
                 <p class="text-base md:text-lg">And who knows, you might just get something special to go along with it!</p>
             </div>
             <!-- end pricing header -->
-            
+
             <!-- card container -->
             <div class="grid max-w-screen-md gap-10 md:grid-cols-2 sm:mx-auto">
                 {{#foreach @products as |product|}}
@@ -32,6 +32,7 @@
                             </div>
                         </div>
                         {{> "members/benefits"}}
+                        <p class="text-xl font-medium tracking-wide text-gray-100"><a href="javascript:" data-members-plan="yearly">Sign Up</a></p>
                     </div>
                     {{> "decorators/svg-shadow-box"}}
                 </div>
@@ -41,6 +42,6 @@
             </div>
             <!-- end card container -->
     </div>
-    
+
 </div>
 <!-- end pricing -->
