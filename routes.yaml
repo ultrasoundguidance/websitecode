@@ -1,5 +1,10 @@
 routes:
-  /: 
-    template: coming-soon
-    data: page.coming-soon
-  
+  /: home
+
+collections:
+  /videos/:
+    permalink: /videos/{slug}/
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
