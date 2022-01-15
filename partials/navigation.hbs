@@ -44,5 +44,20 @@
 				{{/foreach}}
 			</ul>
 		</div>
+		<div>
+			<p class="font-medium tracking-wide text-gray-300">Social</p>
+			<ul class="mt-2 space-y-2">
+				<li>
+					{{#if @site.twitter}}
+						{{> "icons/twitter"}}
+					{{/if}}
+				</li>
+				<li>	
+					{{#if @site.facebook}}
+						{{> "icons/facebook"}}
+					{{/if}}
+				</li>
+			</ul>
+		</div>
 	</div>
 {{/unless}}
