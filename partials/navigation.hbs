@@ -11,6 +11,8 @@
 		<li>
 			<a href="#/portal/account/" aria-label="account" title="my account" class="lnk">My Account</a>
 		</li>
+		<li>
+			<a href="#/portal/signout/" aria-label="sign out" title="sign out" class="lnk">Sign out</a>
 	{{/if}}
 	{{#unless @member}}
 	{{#foreach navigation}}
@@ -24,78 +26,11 @@
 	</li>
 	{{/unless}}
 	<!-- End membership -->
-	<!-- Mode switch -->
-	<li>
-		<button @click="darkMode = !darkMode" :aria-checked="darkMode" :class="{'bg-gray-700': darkMode, 'bg-gray-200': !darkMode }" type="button" class="mx-0 self-center relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-900 hover:shadow" role="switch">
-		  <span class="sr-only">Enable light mode</span>
-		  <span :class="{'translate-x-0': darkMode, 'translate-x-5': !darkMode }" class="pointer-events-none relative inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200">
-			<span :class="{'opacity-100 ease-in duration-200 text-primary-900': darkMode, 'opacity-0 ease-out duration-100': !darkMode }" class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
-			  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-				<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-			  </svg>
-			</span>
-			<span :class="{'opacity-0 ease-out duration-100': darkMode, 'opacity-100 ease-in duration-200 text-primary-900': !darkMode }" class="absolute inset-0 h-full w-full flex items-center justify-center transition-opacity" aria-hidden="true">
-			  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd" />
-			  </svg>
-			</span>
-		  </span>
-		</button>
-	</li>
-	<!-- END mode switch -->
+	
+	{{> "switch"}}
 </ul>
-<!-- Mobile menu -->
-<div x-data="{ showMenu : false }" class="lg:hidden">
-	<button @click="showMenu = !showMenu" aria-label="Open Menu" title="Open Menu" class="p-2 -mr-1 transition duration-200 rounded hover:bg-primary-900 focus:outline-none focus:shadow-outline focus:bg-primary-900">
-		<svg class="w-5 text-gray-600" viewBox="0 0 24 24">
-			<path fill="currentColor" d="M23,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,13,23,13z"></path>
-			<path fill="currentColor" d="M23,6H1C0.4,6,0,5.6,0,5s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,6,23,6z"></path>
-			<path fill="currentColor" d="M23,20H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,20,23,20z"></path>
-		</svg>
-	</button>
-	<!-- Mobile menu dropdown -->
-	<div x-show="showMenu" class="absolute top-0 left-0 w-full z-50">
-		<div class="p-5 bg-gray-50 dark:bg-gray-800 border border-primary-900 dark:border-accent-400 rounded shadow-sm">
-			<div class="flex items-center justify-between mb-4">
-				<div>
-					<a href="/" aria-label="Company" title="Company" class="inline-flex items-center">
-						<span class="text-xl font-bold text-primary-900 dark:text-accent-400">Ultrasound Guidance</span>
-					</a>
-				</div>
-				<div>
-					<button @click="showMenu = !showMenu" aria-label="Close Menu" title="Close Menu" class="p-2 -mt-2 -mr-2 transition duration-200 rounded hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
-						<svg class="w-5 text-gray-600" viewBox="0 0 24 24">
-							<path fill="currentColor" d="M19.7,4.3c-0.4-0.4-1-0.4-1.4,0L12,10.6L5.7,4.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4l6.3,6.3l-6.3,6.3 c-0.4,0.4-0.4,1,0,1.4C4.5,19.9,4.7,20,5,20s0.5-0.1,0.7-0.3l6.3-6.3l6.3,6.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3 c0.4-0.4,0.4-1,0-1.4L13.4,12l6.3-6.3C20.1,5.3,20.1,4.7,19.7,4.3z"></path>
-						</svg>
-					</button>
-				</div>
-			</div>
-			<nav>
-				<ul class="space-y-4">
-					{{#unless @member.paid}}
-						{{#foreach navigation}}
-						<li>
-							<a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium btn">{{label}}</a>
-						</li>
-						{{/foreach}}
-						<li>
-							<a href="#/portal/signin" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-accent-400 transition duration-200 rounded shadow-md bg-primary-900 hover:bg-accent-400 hover:text-primary-900 dark:text-tertiary-400 dark:hover:bg-accent-400 focus:shadow-outline focus:outline-none" aria-label="Log in" title="Log in">Log in</a>
-						</li>
-					{{else}}
-						<li>
-							<a href="/videos/" aria-label="Videos" title="Videos" class="font-medium tracking-wide text-primary-900 dark:text-accent-400 transition-colors duration-200 hover:text-accent-400 dark:hover:text-primary-600">Videos</a>
-						</li>
-						<li>
-							<a href="#/portal/account" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md bg-primary-900 text-accent-400 hover:bg-accent-400 focus:shadow-outline focus:outline-none" aria-label="My account" title="My account">My account</a>
-						</li>
-					{{/unless}}
-				</ul>
-			</nav>
-		</div>
-	</div>
-	<!-- END dropdown -->
-</div>
-<!-- end mobile menu -->
+
+{{> "mobilemenu"}}
 
 {{else}}
 	<div class="grid grid-cols-2 gap-5 row-gap-8 md:grid-cols-4 lg:col-span-4">
