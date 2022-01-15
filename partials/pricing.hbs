@@ -20,6 +20,7 @@
             <!-- card container -->
             <div class="grid max-w-screen-md gap-10 md:grid-cols-2 sm:mx-auto">
                 {{#foreach @products as |product|}}
+                {{^has any slug="m1"}}
                 <!-- pricing card -->
                 <div>
                     <div class="p-8 bg-gray-900 rounded">
@@ -48,6 +49,7 @@
                     {{> "decorators/svg-shadow-box"}}
                 </div>
                 <!-- end pricing card -->
+                {{/has}}
                 {{/foreach}}
             </div>
             <!-- end card container -->
