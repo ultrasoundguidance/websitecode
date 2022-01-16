@@ -3,15 +3,10 @@
 	<div class="text-lg max-w-prose mx-auto">
 
 {{#if @member.paid}}
+{{#is "videos"}}
 		<h1>
-			{{#is "videos"}}
-				<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
-				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Videos</span>
-			{{/is}}
-			{{#is "tag"}}
-				<span class="block text-base text-center font-semibold tracking-wide uppercase">Videos Tagged</span>
-				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{tag.name}}</span>
-			{{/is}}
+			<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
+			<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Videos</span>
 		</h1>
 	</div>
 
@@ -33,6 +28,22 @@
 			</div>
 		{{/foreach}}
 	{{/get}}
+{{/is}}
+
+{{#is "tag"}}
+	<h1>
+		<span class="block text-base text-center font-semibold tracking-wide uppercase">Videos Tagged</span>
+		<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{tag.name}}</span>
+	</h1>
+</div>
+
+<br />
+	<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
+		{{#foreach posts}}
+			{{> "thumbs"}}
+		{{/foreach}}
+		</div>
+{{/is}}
 	
 {{else}}
 		<div class="relative px-4 sm:px-6 lg:px-8">
