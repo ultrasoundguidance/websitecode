@@ -42,7 +42,7 @@
 			</div>
 
 			<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
-				{{#get "posts" filter="tag:{{slug}}" order="title asc"}}
+				{{#get "posts" include="tags" filter="tag:{{slug}}" order="title asc"}}
 					{{#foreach posts}}
 						{{> "thumbs"}}
 					{{/foreach}}
