@@ -3,9 +3,17 @@
         <img src="{{#if custom_excerpt}}excerpt{{else}}https://images.pexels.com/photos/932638/pexels-photo-932638.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260{{/if}}" class="object-cover w-full h-64 rounded" alt="{{title}}" />
     </a>
     <div class="py-5">
-        <a href="{{url}}" aria-label="Article" class="inline-block mb-3 {{#has tag="#spasticity"}}text-tertiary-400 dark:text-tertiary-400 hover:text-primary-900 dark:hover:text-accent-400{{else}}lnk{{/has}}">
+        <a href="{{url}}" aria-label="Article" class="inline-block mb-3 lnk">
             <p class="text-2xl font-bold leading-5">{{title}}</p>
-            <p>{{#has tag="#msk"}}{{^has tag="#spasticity"}}MSK subscription required{{/has}}{{/has}}</p>
+            {{#unless has tag="basics"}}
+            <p>{{#has tag="#msk"}}
+                    {{^has tag="#spasticity"}}
+                        MSK subscription required
+                    {{else}}
+                        MSK or Spasticity subscription
+                    {{/has}}
+                {{/has}}</p>
+            {{/unless}}
         </a>
     </div>
 </div>
