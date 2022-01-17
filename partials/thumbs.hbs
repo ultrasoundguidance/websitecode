@@ -5,6 +5,7 @@
     <div class="py-5">
         <a href="{{url}}" aria-label="Article" class="inline-block mb-3 {{#has tag="#spasticity"}}text-tertiary-400 dark:text-tertiary-400 hover:text-primary-900 dark:hover:text-accent-400{{else}}lnk{{/has}}">
             <p class="text-2xl font-bold leading-5">{{title}}</p>
+            <p>{{^has tag="#spasticity,basics"}}MSK subscription required{{/has}}</p>
         </a>
     </div>
 </div>
