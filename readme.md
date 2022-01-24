@@ -4,8 +4,7 @@ Designed by [a human online](https://ahuman.online), made for [Ultrasound Guidan
 
 ## Customize Portal text
 Please add this code to the "Code Injection" area of the admin dashboard:
-```
-<script>
+```<script>
 $(function() {
     const headerText='<div style="text-align:center;color:#3e0293;">Personal email is recommended</div>';
     window.addEventListener('hashchange', function() { if (location.hash.startsWith('#/portal')) {setTimeout(function(){$("#ghost-portal-root").find("iframe").contents().find(".gh-portal-content.signup .gh-portal-section").prepend(headerText)},200)}})
