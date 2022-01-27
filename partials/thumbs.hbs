@@ -1,28 +1,8 @@
 <div class="overflow-hidden transition-shadow duration-300 rounded">
-    <a href="{{url}}" aria-label="{{title}}">
-        <img 
-        src="
-            {{#if custom_excerpt}}
-                {{excerpt}}
-            {{else}}
-                {{asset "images/ultrasound@3x.jpg"}}
-            {{/if}}
-        " 
-        class="object-cover w-full h-64 rounded object-left" 
-        alt="{{title}}" />
-    </a>
-    <div class="py-5">
-        <a href="{{url}}" aria-label="Article" class="inline-block mb-3 lnk">
-            <p class="text-2xl font-bold leading-5">{{title}}</p>
-            {{#unless has tag="basics"}}
-            <p>{{#has tag="#msk"}}
-                    {{^has tag="#spasticity"}}
-                        MSK subscription required
-                    {{else}}
-                        MSK or Spasticity subscription
-                    {{/has}}
-                {{/has}}</p>
-            {{/unless}}
-        </a>
-    </div>
+<a href="{{url}}" aria-label="{{title}}">
+<img src="{{#if custom_excerpt}}{{excerpt}}{{else}}{{asset "images/ultrasound@3x.jpg"}}{{/if}}" class="object-cover w-full h-64 rounded object-left" alt="{{title}}" /></a>
+<div class="py-5">
+<a href="{{url}}" aria-label="Article" class="inline-block mb-3 lnk"><p class="text-2xl font-bold leading-5">{{title}}</p>
+{{#unless has tag="basics"}}<p>{{#has tag="#msk"}}{{^has tag="#spasticity"}}MSK subscription required{{else}}MSK or Spasticity subscription{{/has}}{{/has}}</p>{{/unless}}</a>
+</div>
 </div>
