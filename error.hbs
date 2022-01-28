@@ -64,28 +64,25 @@
 </div>
 </nav>
 
-<div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
-    <div class="text-lg max-w-prose mx-auto">
-        <div class="relative px-4 sm:px-6 lg:px-8">
-            <div class="text-lg max-w-prose mx-auto">
-                <h1>
-                    <span class="block text-base text-center font-semibold tracking-wide uppercase">We're Sorry!</span>
-                    <span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Something seems to have gone wrong.</span>
-                </h1>
-            </div>
-            <br /><br /><br />
-            <div class="mt-6 prose prose-lg mx-auto gh-content">
-                <div>
-                    <h2 class="font-bold">{{statusCode}}</h2>
-                    <br />
-                    <p class="text-gray-400">{{message}}</p>
-                    </div>
-                </aside>
-            </div>
-<br /><br /><br />
+<div class="relative pt-6 pb-16 lg:pt-0 overflow-hidden">
+    {{> "decorators/svg-post"}}
+    <div class="relative px-4 sm:px-6 lg:px-8">
+        <div class="text-lg max-w-prose mx-auto">
+            <h1>
+                <span class="block text-base text-center font-semibold tracking-wide uppercase">We're Sorry!</span>
+                <span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Something's gone wrong.</span>
+            </h1>
+        </div>
+        <div class="mt-6 prose prose-lg mx-auto gh-content">
+            <p>We try pretty hard to make sure everything's running smoothly, but something unexpected has happened.</p>
+            <p>You can <a href="/" title="home">go to the home page.</a></p>
+            <p>Or you can drop us a line (by <a href="/contact/">contacting us</a>), and copy and paste the message below, along with any other information that might be useful:</p>
+            <h3>{{statusCode}}</h3>
+            <p>{{message}}</p>
+        </div>
+    </div>
 </div>
-</div>
-</div>
+
 <footer class="bg-gray-900">
     <div class="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8">
 	    <div class="grid row-gap-10 mb-8 lg:grid-cols-6">
