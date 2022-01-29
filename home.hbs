@@ -1,47 +1,9 @@
 {{!< default}}
-<div class="relative flex flex-col py-16 lg:pt-0 lg:flex-col lg:pb-0 ">
-<div class="flex flex-col items-start w-full max-w-xl px-4 mx-auto lg:px-8 lg:max-w-screen-xl">
-<div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5">
-<div class="max-w-xl mb-6">
-<div><p class="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-primary-600 uppercase rounded-full bg-accent-400 dark:bg-primary-800 dark:text-accent-400">Quality Education</p></div>
-<h2 class="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none">Ultrasound expertise<br class="hidden md:block" /> in the palm <span class="inline-block hiliter">of your hand</span></h2>
-<p class="text-base md:text-lg">It’s time to level up your ultrasound skill set. Get the education you need any time you need it. Our videos work on any device, making it easy for you to learn at your own convenience.</p>
-</div>
-<div class="flex flex-col space-y-2 md:space-y-0 md:items-center md:flex-row">
-<a href="#/portal/" class="btn md:mr-1">Join Now</a><a href="/plans/" aria-label="" class="btn md:ml-1">Learn more</a>
-</div>
-</div>
-</div>
-<div class="kg-embed inset-y-0 right-0 w-full max-w-xl px-4 mx-auto lg:pl-8 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-1/2 lg:max-w-full lg:absolute xl:px-0">
-     <iframe class="kg-embed-card rounded lg:rounded-tl-2xl"
-     src="https://player.vimeo.com/video/659983273?h=b0b4d06512" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-    <iframe class="kg-embed-card rounded lg:rounded-bl-2xl !sm:mb-0 pb-0"
-     src="https://player.vimeo.com/video/626282033?h=453c2db995" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-   </div>
-</div>
-<br />
-<div class="px-4 py-16 mt-2 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8 lg:py-20">
-<div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
-<span class="relative inline-block">{{> "decorators/svg-headline"}}</span>
-</div>
-<div class="grid max-w-screen-lg gap-8 row-gap-10 mx-auto lg:grid-cols-2">
-<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-{{> "decorators/svg-probe"}}
-<div><h6 class="mb-3 text-xl font-bold leading-5">Accessible</h6><p class="mb-3 text-sm">Ultrasound is a complex skill set that can take years to learn. Don’t limit yourself to occasional seminars that offer limited education for a limited time. Ultrasound Guidance combines true ultrasound expertise with modern convenience to give you an educational resource that can be with you as often and as long as you need it.</p><a href="/features/" aria-label="" class="lnk">Learn more</a></div>
-</div>
-<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-{{> "decorators/svg-probe"}}
-<div><h6 class="mb-3 text-xl font-bold leading-5">Affordable</h6><p class="mb-3 text-sm text-gray-900 dark:text-gray-200">Online ultrasound education doesn’t have to be expensive to be effective. We recognize that you don’t always have thousands of dollars and a full weekend to regularly dedicate to your own learning. Our videos are priced affordably to make them accessible to all and designed to be watched at whatever speed you need for however long you like.</p><a href="/plans/" aria-label="" class="lnk">Learn more</a></div>
-</div>
-<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-{{> "decorators/svg-probe"}}
-<div><h6 class="mb-3 text-xl font-bold leading-5">On demand</h6><p class="mb-3 text-sm text-gray-900 dark:text-gray-200">Our videos combine in-depth explanation with detailed visuals to make sure you’re looking at the same thing we’re looking at. Our videos are made by experts who know what it’s like to be learning ultrasound for the first time, and are targeted at learners of all levels and abilities.</p><a href="/features/" aria-label="" class="lnk">Learn more</a></div>
-</div>
-<div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-{{> "decorators/svg-probe"}}
-<div><h6 class="mb-3 text-xl font-bold leading-5">Tailored and professional</h6><p class="mb-3 text-sm text-gray-900 dark:text-gray-200">Whether you are studying to pass an exam, or simply wishing to become an expert in diagnostic and interventional ultrasound, we will personally guide you from introductory stages all the way to advanced scanning.</p><a href="/about/" aria-label="" class="lnk">Learn more</a>
-</div>
-</div>
-</div>
-</div>
+
+{{#get "posts" filter="tag:hash-homepage" order="asc"}}
+    {{#foreach posts}}
+        {{content}}
+    {{/foreach}}
+{{/get}}
+
 {{> "pricing"}}
