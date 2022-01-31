@@ -5,15 +5,16 @@
 <div class="grid max-w-screen-lg gap-8 row-gap-10 mx-auto lg:grid-cols-2">
 {{#get "posts" filter="tag:hash-bullet-features" order="asc"}}
    {{#foreach posts}}
-      <div class="flex flex-col max-w-md sm:mx-auto sm:flex-row">
-          <div class="mr-4"><div class="flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-gray-100 dark:bg-gray-300">
-         {{> "decorators/svg-probe"}}
-      </div>
-      </div>
-      <div>
-          <h6 class="mb-3 text-xl font-bold leading-5">{{title}}</h6>
-          <p class="mb-3 text-sm">{{content}}</p>
-      </div>
+      <div class="hero-feature-container">
+          <div class="mr-4">
+             <div class="hero-feature-probe">
+               {{> "decorators/svg-probe"}}
+            </div>
+            </div>
+         <div>
+            <h6 class="hero-feature-title">{{title}}</h6>
+            <p class="hero-feature-body">{{content}}</p>
+         </div>
       </div>
    {{/foreach}}
 {{/get}}
