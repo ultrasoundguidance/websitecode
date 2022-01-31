@@ -129,6 +129,14 @@ article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg 
   @apply font-medium text-gray-300 !important;
 }
 
+.hero-button-left {
+  @apply btn md:mr-1 !important;
+}
+
+.hero-button-right {
+  @apply btn md:ml-1 !important;
+}
+
 /* ----- 3. Ghost Editor styling ----- */
 
 /* This keeps small embeds centered */
