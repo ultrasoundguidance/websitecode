@@ -113,6 +113,22 @@ article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg 
   @apply inline-block hiliter;
 }
 
+.hero-button-container {
+  @apply flex flex-col space-y-2 md:space-y-0 md:items-center md:flex-row !important;
+}
+
+.benefit-list {
+  @apply mb-8 space-y-2 !important;
+}
+
+.benefit-item {
+  @apply flex items-center !important;
+}
+
+.benefit-text {
+  @apply font-medium text-gray-300 !important;
+}
+
 /* ----- 3. Ghost Editor styling ----- */
 
 /* This keeps small embeds centered */
