@@ -1,6 +1,5 @@
 routes:
   /: home
-  /edit-test/: template-home
 
 collections:
   /videos/:
