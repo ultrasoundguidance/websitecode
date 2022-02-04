@@ -1,4 +1,5 @@
 {
+  "tailwindcss.workspace.tailwindConfig" : "\/Users\/aden\/Workspace\/sonar\/tailwind.config.js",
   "workspace.color" : 2,
   "workspace.name" : "Sonar",
   "workspace.preview_append_paths" : false,
