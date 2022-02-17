@@ -38,11 +38,11 @@ th {
 }
 
 .prose, strong, blockquote, blockquote p, code, pre {
-  @apply dark:text-gray-200 !important;
+  @apply dark:text-gray-200;
 }
 
 .prose h1, h2, h3, h4, h5, h6, h1 span {
-  @apply text-primary-900 dark:text-accent-400 !important;
+  @apply text-primary-900 dark:text-accent-400;
 }
 
 .prose a {
@@ -54,7 +54,7 @@ th {
 }
 
 .btn {
-  @apply inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md bg-primary-900 text-accent-400 hover:bg-accent-400 hover:text-primary-900 hover:shadow-none focus:shadow-outline focus:outline-none dark:text-primary-900 dark:bg-accent-400 dark:hover:bg-primary-900 dark:hover:text-accent-400 dark:font-medium dark:hover:font-medium !important;
+  @apply inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md bg-primary-900 text-accent-400 hover:bg-accent-400 hover:text-primary-900 hover:shadow-none focus:shadow-outline focus:outline-none dark:text-primary-900 dark:bg-accent-400 dark:hover:bg-primary-900 dark:hover:text-accent-400 dark:font-medium dark:hover:font-medium;
 }
 
 .lnk {
@@ -62,7 +62,7 @@ th {
 }
 
 .foot-lnk {
-  @apply text-gray-400 hover:text-accent-400 !important;
+  @apply text-gray-400 hover:text-accent-400;
 }
 
 .brand-lnk {
@@ -70,27 +70,27 @@ th {
 }
 
 .hiliter {
-  @apply text-accent-400 dark:text-primary-400 !important;
+  @apply text-accent-400 dark:text-primary-400;
 }
 
 article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg h4, article.prose-lg h5, article.prose-lg h6 {
-  @apply mb-4 !important;
+  @apply mb-4;
 }
 
 .hero-headliner {
-  @apply inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-primary-600 uppercase rounded-full bg-accent-400 dark:bg-primary-800 dark:text-accent-400 !important;
+  @apply inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-primary-600 uppercase rounded-full bg-accent-400 dark:bg-primary-800 dark:text-accent-400;
 }
 
 .hero-title {
-  @apply max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none !important;
+  @apply max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none;
 }
 
 .hero-bodycopy {
-  @apply text-base md:text-lg !important;
+  @apply text-base md:text-lg;
 }
 
 .hero-feature-container {
-  @apply flex flex-col max-w-md sm:mx-auto sm:flex-row !important;
+  @apply flex flex-col max-w-md sm:mx-auto sm:flex-row;
 }
 
 .hero-probe {
@@ -102,11 +102,11 @@ article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg 
 }
 
 .hero-feature-body {
-  @apply mb-3 text-sm !important;
+  @apply mb-3 text-sm;
 }
 
 .hero-title-break {
-  @apply hidden md:block !important;
+  @apply hidden md:block;
 }
 
 .hero-alternate-color {
@@ -114,31 +114,35 @@ article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg 
 }
 
 .hero-button-container {
-  @apply flex flex-col space-y-2 md:space-y-0 md:items-center md:flex-row !important;
+  @apply flex flex-col space-y-2 md:space-y-0 md:items-center md:flex-row;
 }
 
 .benefit-list {
-  @apply mb-8 space-y-2 !important;
+  @apply mb-8 space-y-2;
 }
 
 .benefit-item {
-  @apply flex items-center !important;
+  @apply flex items-center;
 }
 
 .benefit-text {
-  @apply font-medium text-gray-300 !important;
+  @apply font-medium text-gray-300;
 }
 
 .hero-button-left {
-  @apply btn md:mr-1 !important;
+  @apply btn md:mr-1;
 }
 
-.hero-button-right {
-  @apply btn md:ml-1 !important;
+.hero-button-center {
+  @apply btn md:mx-1;
+}
+
+.hero-button-callout {
+  @apply inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none dark:font-medium dark:hover:font-medium md:ml-1 text-lg bg-accent-400 text-primary-900 hover:text-tertiary-400 hover:bg-primary-900 dark:text-tertiary-400 dark:bg-primary-900 dark:hover:bg-accent-400;
 }
 
 .hero-video-container {
-  @apply inset-y-0 right-0 w-full max-w-xl px-4 mx-auto lg:pl-8 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-1/2 lg:max-w-full lg:absolute xl:px-0 !important;
+  @apply inset-y-0 right-0 w-full max-w-xl px-4 mx-auto lg:pl-8 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-1/2 lg:max-w-full lg:absolute xl:px-0;
 }
 
 /* ----- 3. Ghost Editor styling ----- */
@@ -174,10 +178,10 @@ figcaption a {
 
 /* Highly specific styles for traditional Instagram embeds */
 iframe.instagram-media {
-  margin-top: 6vmin !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  margin-bottom: 0 !important;
+  margin-top: 6vmin;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
 }
 
 iframe.instagram-media + script + :not([id]) {
@@ -246,7 +250,7 @@ Ghost editor. */
   display: flex;
   color: currentColor;
   font-family: var(--font-sans-serif);
-  text-decoration: none !important;
+  text-decoration: none;
   background: rgba(255,255,255,0.6);
   border-radius: 5px;
   box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.4);
