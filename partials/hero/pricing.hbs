@@ -1,39 +1,27 @@
 <div class="relative w-full h-full bg-gray-100 dark:bg-gray-700">
-<div class="absolute hidden w-full lg:block h-96"></div>
-<div class="relative px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 ">
-<div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12 ">
-<h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight sm:text-4xl md:mx-auto"><span class="relative inline-block">{{> "decorators/svg-headline"}}<span class="relative">Get access</span></span> to <br />Ultrasound Guidance</h2>
-</div>
-<div class="grid max-w-screen-md gap-10 md:grid-cols-2 sm:mx-auto">
-{{#foreach @products as |product|}}
-{{#has number="2,4"}}
-<div>
-<div class="p-8 bg-gray-900 rounded">
-<div class="mb-4 text-center">
-<p class="text-xl font-medium tracking-wide text-gray-100">{{product.name}}</p>
-<div class="flex items-center justify-center">
-<p class="mr-2 text-5xl font-semibold text-white lg:text-6xl">${{price yearly_price.amount}}</p><p class="text-lg text-gray-400">/ year</p>
-</div>
-</div>
-{{> "members/benefits"}}
-<div class="mb-4 text-center"
-<p class="text-2xl font-medium tracking-wide"><a class="btn" href="
-{{#has number="2"}}
-#/portal/signup/61d6e8822c1fc80048850097/yearly
-{{else has number="3"}}
-#/portal/signup/61d6e88c2c1fc8004885009b/yearly
-{{else has number="4"}}
-#/portal/signup/61d6e8992c1fc800488500a3/yearly
-{{else has number="5"}}
-#/portal/signup/61d6e89f2c1fc800488500a7/yearly
-{{/has}}
-">Sign Up</a></p>
-</div>
-</div>
-{{> "decorators/svg-shadow-box"}}
-</div>
-{{/has}}
-{{/foreach}}
-</div>
-</div>
+    <div class="absolute hidden w-full lg:block h-96"></div>
+    <div class="relative px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 ">
+        <div class="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12 ">
+            <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold leading-none tracking-tight sm:text-4xl md:mx-auto"><span class="relative inline-block">{{> "decorators/svg-headline"}}<span class="relative">Get access</span></span> to <br />Ultrasound Guidance</h2>
+        </div>
+        <div class="grid max-w-screen-md gap-10 md:grid-cols-2 sm:mx-auto">
+            {{#foreach @products as |product|}}
+                <div>
+                    <div class="p-8 bg-gray-900 rounded">
+                        <div class="mb-4 text-center">
+                            <p class="text-xl font-medium tracking-wide text-gray-100">{{product.name}}</p>
+                            <div class="flex items-center justify-center">
+                                <p class="mr-2 text-5xl font-semibold text-white lg:text-6xl">${{price yearly_price.amount}}</p><p class="text-lg text-gray-400">/ year</p>
+                            </div>
+                        </div>
+                    {{> "members/benefits"}}
+                        <div class="mb-4 text-center"
+                            <p class="text-2xl font-medium tracking-wide"><a class="btn" href="">Sign Up</a></p>
+                        </div>
+                    </div>
+                {{> "decorators/svg-shadow-box"}}
+                </div>
+            {{/foreach}}
+        </div>
+    </div>
 </div>
