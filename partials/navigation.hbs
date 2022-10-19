@@ -1,29 +1,55 @@
 {{#unless isSecondary}}
-<ul class="flex items-center align-text-top hidden space-x-8 lg:-mt-6 lg:flex">
-<li><a href="/" aria-label="home" title="home" class="lnk">Home</a></li>
-{{#if @member}}
-<li><a href="/videos/" aria-label="videos" title="videos" class="lnk">Videos</a></li>
-<li><a href="#/portal/account/" aria-label="account" title="my account" class="lnk">My Account</a></li>
-<li><a href="#/portal/signout/" aria-label="sign out" title="sign out" class="lnk">Sign out</a></li>
+	<ul class="flex items-center align-text-top hidden space-x-8 lg:-mt-6 lg:flex">
+		<li><a href="/" aria-label="home" title="home" class="lnk">Home</a></li>
+		{{#if @member}}
+			<li>
+				<a href="/videos/" aria-label="videos" title="videos" class="lnk">Videos</a>
+			</li>
+			<li>
+				<a href="#/portal/account/" aria-label="account" title="my account" class="lnk">My Account</a>
+			</li>
+			<li>
+				<a href="#/portal/signout/" aria-label="sign out" title="sign out" class="lnk">Sign out</a>
+			</li>
+		{{else}}
+			{{#foreach navigation}}
+				<li>
+					<a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="lnk">{{label}}</a>
+				</li>
+			{{/foreach}}
+			<li>
+				<a href="#/portal/signin/" class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none btn" aria-label="Log in" title="Sign up">Log in</a>
+			</li>
+		{{/if}}
+		{{> "features/switch"}}
+	</ul>
+	{{> "features/mobilemenu"}}
 {{else}}
-{{#foreach navigation}}<li><a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="lnk">{{label}}</a></li>{{/foreach}}
-<li><a href="#/portal/signin/" class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md hover:shadow-none focus:shadow-outline focus:outline-none btn" aria-label="Log in" title="Sign up">Log in</a></li>
-{{/if}}
-{{> "features/switch"}}
-</ul>
-{{> "features/mobilemenu"}}
-{{else}}
-<div class="grid grid-cols-2 gap-5 row-gap-8 md:grid-cols-4 lg:col-span-4">
-<div><p class="font-medium tracking-wide text-gray-300">Information</p>
-<ul class="mt-2 space-y-2">
-{{#foreach navigation}}<li><a href="{{url absolute="true"}}" class="lnk foot-lnk">{{label}}</a></li>{{/foreach}}
-</ul>
-</div>
-<div><p class="font-medium tracking-wide text-gray-300">Social</p>
-<ul class="mt-2 space-y-2">
-<li>{{#if @site.twitter}}{{> "icons/twitter"}}{{/if}}</li>
-<li>{{#if @site.facebook}}{{> "icons/facebook"}}{{/if}}</li>
-</ul>
-</div>
-</div>
+	<div class="grid grid-cols-2 gap-5 row-gap-8 md:grid-cols-4 lg:col-span-4">
+		<div>
+			<p class="font-medium tracking-wide text-gray-300">Information</p>
+			<ul class="mt-2 space-y-2">
+				{{#foreach navigation}}
+					<li>
+						<a href="{{url absolute="true"}}" class="lnk foot-lnk">{{label}}</a>
+					</li>
+				{{/foreach}}
+			</ul>
+		</div>
+		<div>
+			<p class="font-medium tracking-wide text-gray-300">Social</p>
+			<ul class="mt-2 space-y-2">
+				<li>
+					{{#if @site.twitter}}
+						{{> "icons/twitter"}}
+					{{/if}}
+				</li>
+				<li>
+					{{#if @site.facebook}}
+						{{> "icons/facebook"}}
+					{{/if}}
+				</li>
+			</ul>
+		</div>
+	</div>
 {{/unless}}
