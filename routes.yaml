@@ -5,11 +5,9 @@ collections:
   /procedures/:
     permalink: /procedures/{slug}/
     template: procedure
-    filter: 'tag:hash-procedure'
   /videos/:
     permalink: /videos/{slug}/
     template: index
-    filter: 'tag:hash-msk'
 
 taxonomies:
   tag: /tag/{slug}/
