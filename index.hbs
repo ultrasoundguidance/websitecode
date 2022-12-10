@@ -1,33 +1,70 @@
 {{!< default}}
 <div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
-<div class="text-lg max-w-prose mx-auto">
-{{#if @member}}{{#is "videos"}}
-<h1><span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span><span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Videos</span></h1>
-</div>
-<br />
-{{#get "tags" limit="all" filter="slug:basics"}}{{#foreach tags}}<div class="text-lg max-w-prose mb-5"><h1><span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span></h1></div>
-<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
-{{#get "posts" limit="all" filter="tag:{{slug}}"}}{{#foreach posts}}{{> "thumbs"}}{{/foreach}}{{/get}}
-</div>{{/foreach}}{{/get}}
-{{#get "tags" limit="all" filter="slug:-'basics'" as |tags|}}{{#foreach tags}}
-<div class="text-lg max-w-prose mb-5"><h1><span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span></h1></div>
-<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">{{#get "posts" include="tags" filter="tag:{{slug}}" order="title asc"}}{{#foreach posts}}{{> "thumbs"}}{{/foreach}}{{/get}}</div>{{/foreach}}{{/get}}
-{{/is}}
-{{#is "tag"}}
-<h1><span class="block text-base text-center font-semibold tracking-wide uppercase">Videos Filed Under</span><span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{tag.name}}</span></h1>
-</div>
-<br />
-<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">{{#foreach posts}}{{> "thumbs"}}{{/foreach}}</div>
-{{/is}}
-{{else}}
-<div class="relative px-4 sm:px-6 lg:px-8">
-<div class="text-lg max-w-prose mx-auto">
-<h1><span class="block text-base text-center font-semibold tracking-wide uppercase">Welcome to Ultrasound Guidance</span><span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Please Log In</span></h1>
-</div>
-<br /><br /><br />
-<div class="mt-6 prose prose-lg mx-auto gh-content">{{> "content-cta"}}</div>
-<br /><br /><br />
-</div>
-{{/if}}
-</div>
+	<div class="text-lg max-w-prose mx-auto">
+		{{#if @member}}
+			{{#is "videos"}}
+				<h1>
+					<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
+					<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Diagnostic Atlas</span>
+				</h1>
+				</div>
+				<br />
+				{{#get "tags" limit="all" filter="slug:basics"}}
+					{{#foreach tags}}
+						<div class="text-lg max-w-prose mb-5">
+							<h1>
+								<span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span>
+							</h1>
+						</div>
+						<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
+							{{#get "posts" limit="all" filter="tag:{{slug}}"}}
+								{{#foreach posts}}
+									{{> "thumbs"}}
+								{{/foreach}}
+							{{/get}}
+						</div>
+					{{/foreach}}
+				{{/get}}
+				{{#get "tags" limit="all" filter="slug:-'basics'+slug:-'procedures'+slug:-'news'" as |tags|}}
+					{{#foreach tags}}
+					<div class="visibility-container">
+						<div class="text-lg max-w-prose mb-5">
+							<h1>
+								<span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span>
+							</h1>
+						</div>
+						<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full postItem">{{#get "posts" include="tags" filter="tag:{{slug}}" order="title asc"}}{{#foreach posts}}{{^has tag="#procedure"}}{{> "thumbs"}}{{/has}}{{/foreach}}{{/get}}</div>
+					</div>
+					{{/foreach}}
+				{{/get}}
+			{{/is}}
+			{{#is "tag"}}
+				<h1>
+					<span class="block text-base text-center font-semibold tracking-wide uppercase">Videos Filed Under</span>
+					<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{tag.name}}</span>
+				</h1>
+				</div>
+				<br />
+				<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
+					{{#foreach posts}}
+						{{> "thumbs"}}
+					{{/foreach}}
+				</div>
+			{{/is}}
+		{{else}}
+			<div class="relative px-4 sm:px-6 lg:px-8">
+				<div class="text-lg max-w-prose mx-auto">
+					<h1>
+						<span class="block text-base text-center font-semibold tracking-wide uppercase">Welcome to Ultrasound Guidance</span>
+						<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Please Log In</span>
+					</h1>
+				</div>
+				<br /><br /><br />
+				<div class="mt-6 prose prose-lg mx-auto gh-content">
+					{{> "content-cta"}}
+				</div>
+				<br /><br /><br />
+			</div>
+		{{/if}}
+	</div>
 </div>
