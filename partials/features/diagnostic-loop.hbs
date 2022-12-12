@@ -1,5 +1,5 @@
 {{> "features/basics-loop"}}
-{{#get "tags" limit="all" filter="slug:-'basics'+slug:-'procedures'+slug:-'news'" as |tags|}}
+{{#get "tags" limit="all" filter="slug:-['basics','procedures','news']" as |tags|}}
 	{{#foreach tags}}
 	<div class="visibility-container">
 		<div class="text-lg max-w-prose mb-5">

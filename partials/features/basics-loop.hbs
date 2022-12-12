@@ -7,17 +7,19 @@
 				</h1>
 			</div>
 			<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full postItem">
-				{{#get "posts" limit="all" filter="tag:{{slug}}"}}
-					{{!--{{#is "procedures"}}
-						{{#has tag="#procedure"}}
-							{{#foreach posts}}
+				{{#get "posts" limit="all" include="tags" filter="tag:{{slug}}"}}
+					{{#is "procedures"}}
+						{{#foreach posts}}
+							{{#has tag="#procedure"}}
 								{{> "thumbs"}}
-							{{/foreach}}
-						{{/has}}
-					{{/is}}--}}
+							{{/has}}
+						{{/foreach}}
+					{{/is}}
 					{{#is "videos"}}
 						{{#foreach posts}}
-							{{> "thumbs"}}
+							{{^has tag="#procedure"}}
+								{{> "thumbs"}}
+							{{/has}}
 						{{/foreach}}
 					{{/is}}
 				{{/get}}
