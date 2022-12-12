@@ -1,0 +1,9 @@
+{
+  "clips" : [
+    {
+      "content" : "{{$0}}",
+      "name" : "Mustaches",
+      "trigger" : "jj"
+    }
+  ]
+}

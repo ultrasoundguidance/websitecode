@@ -2,6 +2,9 @@ routes:
   /: home
 
 collections:
+  /procedures/:
+    permalink: /procedures/{slug}/
+    template: procedure
   /videos/:
     permalink: /videos/{slug}/
     template: index
