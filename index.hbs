@@ -4,7 +4,7 @@
 		{{#if @member}}
 			<h1>
 				<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
-				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Diagnostic Atlas</span>
+				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{#is "videos"}}Diagnostic{{else}}Procedures{{/is}} Atlas</span>
 			</h1>
 			</div>
 			<br />
@@ -31,3 +31,18 @@
 		{{/if}}
 	</div>
 </div>
+
+{{#contentFor "index-for-tags"}}
+<script>
+	tocbot.init({
+		// Where to render the table of contents.
+		tocSelector: '.gh-toc',
+		// Where to grab the headings to build the table of contents.
+		contentSelector: '.gh-content',
+		// Which headings to grab inside of the contentSelector element.
+		headingSelector: 'h1, h2, h3, h4',
+		// Ensure correct positioning
+		hasInnerContainers: true,
+	});
+</script>
+{{/contentFor}}

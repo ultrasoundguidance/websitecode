@@ -1,19 +1,4 @@
-{{#get "tags" limit="all" filter="slug:basics"}}
-	{{#foreach tags}}
-		<div class="text-lg max-w-prose mb-5">
-			<h1>
-				<span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span>
-			</h1>
-		</div>
-		<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full">
-			{{#get "posts" limit="all" filter="tag:{{slug}}"}}
-				{{#foreach posts}}
-					{{> "thumbs"}}
-				{{/foreach}}
-			{{/get}}
-		</div>
-	{{/foreach}}
-{{/get}}
+{{> "features/basics-loop"}}
 {{#get "tags" limit="all" filter="slug:-'basics'+slug:-'procedures'+slug:-'news'" as |tags|}}
 	{{#foreach tags}}
 	<div class="visibility-container">
