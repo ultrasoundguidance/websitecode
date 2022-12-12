@@ -8,18 +8,7 @@
 			</h1>
 			</div>
 			<br />
-			{{#get "tags" limit="all" filter="slug:-'basics'+slug:-'msk'+slug:-'news'" as |tags|}}
-				{{#foreach tags}}
-					<div class="visibility-container">
-					<div class="text-lg max-w-prose mb-5">
-						<h1>
-							<span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span>
-						</h1>
-					</div>
-					<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full postItem">{{#get "posts" include="tags" filter="tag:{{slug}}" order="title asc"}}{{#foreach posts}}{{#has tag="#procedure"}}{{> "thumbs"}}{{/has}}{{/foreach}}{{/get}}</div>
-					</div>
-				{{/foreach}}
-			{{/get}}
+			{{> "features/procedure-loop"}}
 		{{else}}
 			<div class="relative px-4 sm:px-6 lg:px-8">
 				<div class="text-lg max-w-prose mx-auto">
