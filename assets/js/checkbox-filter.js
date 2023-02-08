@@ -5,7 +5,7 @@
  * Used on procedure and index pages to remove tags from
  * display and the generated table of contents.
  */
- 
+ /*
 function evaluate(){
 	 var item = $(this);
 	 var relatedItem = $("#" + item.attr("data-related-item")).parent();
@@ -18,3 +18,4 @@ function evaluate(){
  }
  
  $('input[type="checkbox"]').click(evaluate).each(evaluate);
+ */

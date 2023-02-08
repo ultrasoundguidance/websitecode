@@ -14,10 +14,10 @@
 				 </span>
 			</h1>
 			</div>
-			<div class="gh-toc">
+			<br />
+			<div class="gh-toc mx-4">
 				
 			</div>
-			<br />
 			{{#is "videos"}}
 				{{> "features/diagnostic-loop"}}
 			{{/is}}
@@ -51,11 +51,17 @@
 		contentSelector: '.tag-toc',
 		// Which headings to grab inside of the contentSelector element.
 		headingSelector: 'h1',
+		orderedList: false,
+		extraListClasses: '',
+		extraLinkClasses: 'mr-4',
 		// Ensure correct positioning
 		hasInnerContainers: true,
 		// onclick function to apply to all links in toc. will be called with
 		// the event as the first parameter, and this can be used to stop,
 		// propagation, prevent default or perform action
+		onClick: function (e) {
+			$("#" + this.value).closest('.visibility-container').toggle()
+		},
 	});
 </script>
 {{/contentFor}}
