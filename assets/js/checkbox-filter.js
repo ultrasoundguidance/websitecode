@@ -5,5 +5,10 @@
  * Used on procedure and index pages to remove tags from
  * display and the generated table of contents.
  */
+/*
+function uncheckAll(){
+    $('input[type="checkbox"]:checked').prop('checked',false);
+ }
  
- $(".postItem:empty").parent().remove();
+ document.querySelector('#deselect').addEventListener('click', uncheckAll)
+ */

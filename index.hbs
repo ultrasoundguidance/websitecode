@@ -2,19 +2,31 @@
 <div class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
 	<div class="text-lg max-w-prose mx-auto">
 		{{#if @member}}
-			<h1>
-				<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
-				<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">
-					{{#is "videos"}}
-						Diagnostic
-					{{else}}
-						Procedures
-					{{/is}}
-					 Atlas
-				 </span>
-			</h1>
-			</div>
-			<br />
+		<h1>
+			<span class="block text-base text-center font-semibold tracking-wide uppercase">Browse Our</span>
+			<span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">
+			{{#is "videos"}}
+				Diagnostic
+			{{else}}
+				Procedures
+			{{/is}}
+			 Atlas
+			 </span>
+		</h1>
+	</div>
+	<br />
+	<div class="float-left mt-1.5 ml-4 mr-10 mb-4">
+		<div class="text-lg">
+			<h2 class="prose-2xl font-medium">Categories</h2>
+		</div>
+		<div class="gh-toc text-lg">
+			&nbsp;
+					
+		</div>
+	</div>
+	<div class="clear-both md:hidden">
+		
+	</div>
 			{{#is "videos"}}
 				{{> "features/diagnostic-loop"}}
 			{{/is}}
@@ -22,19 +34,19 @@
 				{{> "features/procedure-loop"}}
 			{{/is}}
 		{{else}}
-			<div class="relative px-4 sm:px-6 lg:px-8">
-				<div class="text-lg max-w-prose mx-auto">
-					<h1>
-						<span class="block text-base text-center font-semibold tracking-wide uppercase">Welcome to Ultrasound Guidance</span>
-						<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Please Log In</span>
-					</h1>
-				</div>
-				<br /><br /><br />
-				<div class="mt-6 prose prose-lg mx-auto gh-content">
-					{{> "content-cta"}}
-				</div>
-				<br /><br /><br />
+		<div class="relative px-4 sm:px-6 lg:px-8">
+			<div class="text-lg max-w-prose mx-auto">
+				<h1>
+					<span class="block text-base text-center font-semibold tracking-wide uppercase">Welcome to Ultrasound Guidance</span>
+					<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">Please Log In</span>
+				</h1>
 			</div>
+			<br /><br /><br />
+			<div class="mt-6 prose prose-lg mx-auto gh-content">
+				{{> "content-cta"}}
+			</div>
+			<br /><br /><br />
+		</div>
 		{{/if}}
 	</div>
 </div>
@@ -45,11 +57,20 @@
 		// Where to render the table of contents.
 		tocSelector: '.gh-toc',
 		// Where to grab the headings to build the table of contents.
-		contentSelector: '.gh-content',
+		contentSelector: '.tag-toc',
 		// Which headings to grab inside of the contentSelector element.
-		headingSelector: 'h1, h2, h3, h4',
+		headingSelector: 'h1',
+		orderedList: false,
+		extraListClasses: '',
+		extraLinkClasses: 'mr-4 form-check text-primary-900 dark:text-accent-400 rounded',
 		// Ensure correct positioning
 		hasInnerContainers: true,
+		// onclick function to apply to all links in toc. will be called with
+		// the event as the first parameter, and this can be used to stop,
+		// propagation, prevent default or perform action
+		onClick: function (e) {
+			$("#" + this.value).closest('.visibility-container').toggle()
+		},
 	});
 </script>
 {{/contentFor}}
