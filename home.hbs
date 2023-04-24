@@ -1,7 +1,7 @@
 {{!< default}}
 <div class="relative flex flex-col py-16 lg:pt-0 lg:flex-col lg:pb-0 ">
-   <div class="flex flex-col items-start w-full max-w-xl px-4 mx-auto lg:px-8 lg:max-w-screen-xl">
-      <div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5">
+   <div class="flex flex-col items-start w-full max-w-xl px-4 mx-auto lg:my-10 lg:px-8 lg:max-w-screen-xl">
+      <div class="mb-16 lg:max-w-lg lg:pr-5">
          <div class="max-w-xl mb-6">
             {{#get "posts" filter="slug:hero-copy"}}
                {{#foreach posts}}
@@ -11,7 +11,7 @@
             {{!-- .hero-button-left --}}{{!-- .hero-button-right --}}
          </div>
       </div>
-      <div class="kg-embed hero-video-container">
+      <div class="kg-embed hero-video-container mt-9">
         {{#get "posts" filter="slug:hero-video"}}
             {{#foreach posts}}
                {{content}}
