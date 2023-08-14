@@ -8,10 +8,11 @@
 </div>
 <nav>
 <ul class="space-y-4">
-{{#unless @member.paid}}{{#foreach navigation}}<li><a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium btn">{{label}}</a></li>{{/foreach}}
+{{#unless @member}}{{#foreach navigation}}<li><a href="{{url absolute="true"}}" aria-label="{{label}}" title="{{label}}" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium btn">{{label}}</a></li>{{/foreach}}
 <li><a href="#/portal/signin" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-accent-400 transition duration-200 rounded shadow-md bg-primary-900 hover:bg-accent-400 hover:text-primary-900 dark:text-tertiary-400 dark:hover:bg-accent-400 focus:shadow-outline focus:outline-none" aria-label="Log in" title="Log in">Log in</a></li>
 {{else}}
-<li><a href="/videos/" aria-label="Videos" title="Videos" class="font-medium tracking-wide text-primary-900 dark:text-accent-400 transition-colors duration-200 hover:text-accent-400 dark:hover:text-primary-600">Videos</a></li>
+<li><a href="/videos/" aria-label="Diagnostics" title="Diagnostic Atlas" class="font-medium tracking-wide text-primary-900 dark:text-accent-400 transition-colors duration-200 hover:text-accent-400 dark:hover:text-primary-600">Diagnostic Atlas</a></li>
+<li><a href="/procedures/" aria-label="Procedures" title="Procedures Atlas" class="font-medium tracking-wide text-primary-900 dark:text-accent-400 transition-colors duration-200 hover:text-accent-400 dark:hover:text-primary-600">Procedures Atlas</a></li>
 <li><a href="#/portal/account" class="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md bg-primary-900 text-accent-400 hover:bg-accent-400 focus:shadow-outline focus:outline-none" aria-label="My account" title="My account">My account</a></li>
 {{/unless}}
 </ul>
