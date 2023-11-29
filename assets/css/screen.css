@@ -16,20 +16,20 @@
 /* 1. Global attributes */
 @font-face {
   font-family: 'Sk-Modernist-Regular';
-  src: url(../fonts/sk-modernist-regular-webfont.woff2) format("woff2"),
-    url(../fonts/sk-modernist-regular-webfont.woff) format("woff");
+  src: url(../fonts/sk-modernist-regular-webfont.woff2) format('woff2'),
+    url(../fonts/sk-modernist-regular-webfont.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Sk-Modernist-Light';
-  src: url(../fonts/sk-modernist-light-webfont.woff2) format("woff2"),
-    url(../fonts/sk-modernist-light-webfont.woff) format("woff");
+  src: url(../fonts/sk-modernist-light-webfont.woff2) format('woff2'),
+    url(../fonts/sk-modernist-light-webfont.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Sk-Modernist-Bold';
-  src: url(../fonts/sk-modernist-bold-webfont.woff2) format("woff2"),
-    url(../fonts/sk-modernist-bold-webfont.woff) format("woff");
+  src: url(../fonts/sk-modernist-bold-webfont.woff2) format('woff2'),
+    url(../fonts/sk-modernist-bold-webfont.woff) format('woff');
 }
 
 /* 2. Theme-specific content */
@@ -37,11 +37,22 @@ th {
   @apply text-primary-900 dark:text-accent-400;
 }
 
-.prose, strong, blockquote, blockquote p, code, pre {
+.prose,
+strong,
+blockquote,
+blockquote p,
+code,
+pre {
   @apply dark:text-gray-200;
 }
 
-.prose h1, h2, h3, h4, h5, h6, h1 span {
+.prose h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+h1 span {
   @apply text-primary-900 dark:text-accent-400;
 }
 
@@ -73,7 +84,12 @@ th {
   @apply text-accent-400 dark:text-primary-400;
 }
 
-article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg h4, article.prose-lg h5, article.prose-lg h6 {
+article.prose-lg h1,
+article.prose-lg h2,
+article.prose-lg h3,
+article.prose-lg h4,
+article.prose-lg h5,
+article.prose-lg h6 {
   @apply mb-4;
 }
 
@@ -164,13 +180,13 @@ article.prose-lg h1, article.prose-lg h2, article.prose-lg h3, article.prose-lg 
 figcaption {
   padding: 1.5rem 1.5rem 0;
   text-align: center;
-  color: rgba(0,0,0,0.5);
+  color: rgba(0, 0, 0, 0.5);
   font-weight: 600;
   font-size: 1.3rem;
   line-height: 1.4em;
 }
 figcaption strong {
-  color: rgba(0,0,0,0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 figcaption a {
   color: var(--ghost-accent-color);
@@ -187,7 +203,6 @@ iframe.instagram-media {
 iframe.instagram-media + script + :not([id]) {
   margin-top: 6vmin;
 }
-
 
 /* Galleries
 /* ---------------------------------------------------------- */
@@ -231,7 +246,6 @@ between them, so it looks like 1 big gallery */
   margin: 0 0 0 0.75em;
 }
 
-
 /* Bookmark Cards
 /* ---------------------------------------------------------- */
 
@@ -251,7 +265,7 @@ Ghost editor. */
   color: currentColor;
   font-family: var(--font-sans-serif);
   text-decoration: none;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: 5px;
   box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.4);
   overflow: hidden;
@@ -271,7 +285,7 @@ Ghost editor. */
   font-size: 1.2rem;
   line-height: 1em;
   font-weight: 600;
-  color: #15171A;
+  color: #15171a;
 }
 
 .kg-bookmark-description {
@@ -323,7 +337,7 @@ Ghost editor. */
 }
 
 .kg-bookmark-metadata > span:nth-of-type(2):before {
-  content: "•";
+  content: '•';
   color: #394047;
   margin: 0 6px;
 }
@@ -343,7 +357,6 @@ Ghost editor. */
   left: 0;
   border-radius: 0 4px 4px 0;
 }
-
 
 /* Card captions
 /* ---------------------------------------------------------- */
@@ -366,4 +379,3 @@ Ghost editor. */
 
 /* TocBot styling
 /* ---------------------------------------------------------- */
-
