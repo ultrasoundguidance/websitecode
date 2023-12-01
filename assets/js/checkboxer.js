@@ -66,14 +66,45 @@ function buildChecks() {
 }
 
 function renderBoxes(inputId, evt) {
+  // (1.) Make a list of all checked boxes
+  const grabChecked = document.querySelectorAll('input:checked');
+
   // (1.a.) Get list of categories
   const grabCategories = document.querySelectorAll('[data-visibility]');
 
-  // (1.b.) Get list of unchecked boxes
+  // (1.b.) If no boxes are checked,
+  if (grabChecked.length == 0) {
+    // Make all videos visible,
+    grabCategories.forEach((categorie) => categorie.classList.remove('hidden'));
+    console.log('No videos hidden');
+    // and don't do anything else
+    return;
+  }
+
+  // (2.a.) Create list of unchecked boxes
   const grabUnchecked = document.querySelectorAll('input:not(:checked)');
 
-  // (1.c.) Get list of checked boxes
-  const grabChecked = document.querySelectorAll('input:checked');
-
-  // (2.) If one box is checked, hide all other boxes
+  // (2.b) If this is the only unchecked box
+  if (grabChecked.length == 1) {
+    // (2.c) Loop through all categories
+    for (i = 0; i < grabCategories.length; i++) {
+      // (2.d) and loop through all unchecked boxes
+      for (j = 0; j < grabUnchecked.length; j++) {
+        // (2.e.) and if a category is unchecked,
+        if (grabCategories[i].dataset.visibility == grabUnchecked[j].value) {
+          // (2.f.) then hide it
+          grabCategories[i].classList.add('hidden');
+        }
+      }
+    }
+  } else {
+    // (3.0) Otherwise, go through all the categories
+    for (i = 0; i < grabCategories.length; i++) {
+      // (3.a.) And if they match the now-checked box,
+      if (grabCategories[i].dataset.visibility == inputId) {
+        // (3.b.) show the videos
+        grabCategories[i].classList.toggle('hidden');
+      }
+    }
+  }
 }
