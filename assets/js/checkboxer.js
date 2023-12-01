@@ -43,8 +43,11 @@ function buildChecks() {
     // (2.a.) Create new checkboxes
     let newInput = document.createElement('input');
     newInput.type = 'checkbox';
-    newInput.value = grabTags[i].id;
+    newInput.value = '#' + grabTags[i].id;
     newInput.name = grabTags[i].textContent.trim();
+
+    // (2.a.i) Add event listener to checkbox
+    newInput.addEventListener('click', renderBoxes);
 
     // (2.b.) and labels for those checkboxes
     let newInputLabel = document.createElement('label');
