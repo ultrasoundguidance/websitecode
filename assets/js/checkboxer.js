@@ -43,11 +43,11 @@ function buildChecks() {
     // (2.a.) Create new checkboxes
     let newInput = document.createElement('input');
     newInput.type = 'checkbox';
-    newInput.value = '#' + grabTags[i].id;
+    newInput.value = grabTags[i].id;
     newInput.name = grabTags[i].textContent.trim();
 
     // (2.a.i) Add event listener to checkbox
-    newInput.addEventListener('click', renderBoxes);
+    newInput.addEventListener('click', renderBoxes.bind(null, newInput.value));
 
     // (2.b.) and labels for those checkboxes
     let newInputLabel = document.createElement('label');
@@ -65,10 +65,15 @@ function buildChecks() {
   }
 }
 
-function renderBoxes() {
-  if (document.querySelectorAll(':checked').length > 0) {
-    console.log('At least one box checked');
-  } else {
-    console.log('No boxes checked');
-  }
+function renderBoxes(inputId, evt) {
+  // (1.a.) Get list of categories
+  const grabCategories = document.querySelectorAll('[data-visibility]');
+
+  // (1.b.) Get list of unchecked boxes
+  const grabUnchecked = document.querySelectorAll('input:not(:checked)');
+
+  // (1.c.) Get list of checked boxes
+  const grabChecked = document.querySelectorAll('input:checked');
+
+  // (2.) If one box is checked, hide all other boxes
 }
