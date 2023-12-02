@@ -66,6 +66,11 @@ function buildChecks() {
 }
 
 function renderBoxes(inputId, evt) {
+  // Check for support for localStorage
+  if (typeof Storage !== 'undefined') {
+    // console.log('Supports localStorage');
+  }
+
   // (1.) Make a list of all checked boxes
   const grabChecked = document.querySelectorAll('input:checked');
 
@@ -105,4 +110,6 @@ function renderBoxes(inputId, evt) {
     // (3.b) and adjust its display
     checkedCategory.classList.toggle('hidden');
   }
+
+  // Save preferences for next time
 }
