@@ -98,13 +98,11 @@ function renderBoxes(inputId, evt) {
       }
     }
   } else {
-    // (3.0) Otherwise, go through all the categories
-    for (i = 0; i < grabCategories.length; i++) {
-      // (3.a.) And if they match the now-checked box,
-      if (grabCategories[i].dataset.visibility == inputId) {
-        // (3.b.) show the videos
-        grabCategories[i].classList.toggle('hidden');
-      }
-    }
+    // (3.a) Find the box that matches,
+    const checkedCategory = document.querySelector(
+      `[data-visibility=${CSS.escape(inputId)}]`
+    );
+    // (3.b) and adjust its display
+    checkedCategory.classList.toggle('hidden');
   }
 }
