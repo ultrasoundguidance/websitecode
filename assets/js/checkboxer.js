@@ -34,6 +34,18 @@ function buildChecks() {
   // Root element to build lists inside of
   const tagBlock = document.getElementById('toc-list');
 
+  let ugPrefs;
+  let appPrefs;
+  ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
+
+  if (ugPrefs != null) {
+    if (location.pathname in ugPrefs) {
+      appPrefs = ugPrefs[location.pathname];
+    } else {
+      appPrefs = null;
+    }
+  }
+
   // (1.) Loop through list of elements with slugs
   for (i = 0; i < grabTags.length; i++) {
     // (1.) Create new list items to hold the elements
@@ -62,38 +74,39 @@ function buildChecks() {
     tagBlock.appendChild(newLi);
     newLi.appendChild(newInput);
     newLi.appendChild(newInputLabel);
+
+    if (appPrefs !== null) {
+      if (newInput.value in ugPrefs[location.pathname]) {
+        newInput.checked = true;
+      }
+    }
   }
+  firstRender();
 }
 
 function renderBoxes(inputId, evt) {
-  // (1.) Make a list of all checked boxes
-  const grabChecked = document.querySelectorAll('input:checked');
-
-  // (1.a.) Get list of categories
-  const grabCategories = document.querySelectorAll('[data-visibility]');
+  const checked = getBoxes('CHECKED');
+  const unchecked = getBoxes('UNCHECKED');
+  const categories = document.querySelectorAll('[data-visibility]');
 
   // (1.b.) If no boxes are checked,
-  if (grabChecked.length == 0) {
+  if (checked.length == 0) {
     // Make all videos visible,
-    grabCategories.forEach((categorie) => categorie.classList.remove('hidden'));
-    console.log('No videos hidden');
-    // and don't do anything else
-    return;
-  }
-
-  // (2.a.) Create list of unchecked boxes
-  const grabUnchecked = document.querySelectorAll('input:not(:checked)');
-
-  // (2.b) If this is the only unchecked box
-  if (grabChecked.length == 1) {
+    categories.forEach((categorie) => categorie.classList.remove('hidden'));
+  } else if (checked.length == 1) {
+    // (2.b) If this is the only unchecked box
     // (2.c) Loop through all categories
-    for (i = 0; i < grabCategories.length; i++) {
+
+    for (i = 0; i < categories.length; i++) {
       // (2.d) and loop through all unchecked boxes
-      for (j = 0; j < grabUnchecked.length; j++) {
+
+      for (j = 0; j < unchecked.length; j++) {
         // (2.e.) and if a category is unchecked,
-        if (grabCategories[i].dataset.visibility == grabUnchecked[j].value) {
+
+        if (categories[i].dataset.visibility == unchecked[j].value) {
           // (2.f.) then hide it
-          grabCategories[i].classList.add('hidden');
+
+          categories[i].classList.add('hidden');
         }
       }
     }
@@ -109,6 +122,19 @@ function renderBoxes(inputId, evt) {
   setPreferences();
 }
 
+function firstRender() {
+  const checked = getBoxes('CHECKED');
+  if (checked.length > 0) {
+    const unchecked = getBoxes('UNCHECKED');
+    for (i = 0; i < unchecked.length; i++) {
+      const categoryToHide = document.querySelector(
+        `[data-visibility=${CSS.escape(unchecked[i].value)}]`
+      );
+      categoryToHide.classList.toggle('hidden');
+    }
+  }
+}
+
 function setPreferences() {
   // Get existing preferences
   let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
@@ -116,16 +142,18 @@ function setPreferences() {
   // If there are none, build the object
   if (ugPrefs === null) {
     ugPrefs = {};
-    ugPrefs[application.pathname] = {};
+    ugPrefs[location.pathname] = {};
   }
 
   // Build an object to store this page's preferences
   let appPrefs = {};
 
   // Store this session's preferences in the new object
-  const grabChecked = document.querySelectorAll('input:checked');
-  for (let i = 0; i < grabChecked.length; i++) {
-    appPrefs[`${grabChecked[i].value}`] = true;
+  const checked = getBoxes('CHECKED');
+  if (checked.length > 0) {
+    for (let i = 0; i < checked.length; i++) {
+      appPrefs[`${checked[i].value}`] = true;
+    }
   }
 
   // Overwrite the old session's preferences with the new one
@@ -133,4 +161,12 @@ function setPreferences() {
 
   // Write the object
   localStorage.setItem('ugPrefs', JSON.stringify(ugPrefs));
+}
+
+function getBoxes(KIND) {
+  if (KIND === 'CHECKED') {
+    return document.querySelectorAll('input:checked');
+  } else if (KIND === 'UNCHECKED') {
+    return document.querySelectorAll('input:not(:checked)');
+  }
 }
