@@ -66,11 +66,6 @@ function buildChecks() {
 }
 
 function renderBoxes(inputId, evt) {
-  // Check for support for localStorage
-  if (typeof Storage !== 'undefined') {
-    // console.log('Supports localStorage');
-  }
-
   // (1.) Make a list of all checked boxes
   const grabChecked = document.querySelectorAll('input:checked');
 
@@ -111,5 +106,31 @@ function renderBoxes(inputId, evt) {
     checkedCategory.classList.toggle('hidden');
   }
 
-  // Save preferences for next time
+  setPreferences();
+}
+
+function setPreferences() {
+  // Get existing preferences
+  let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
+
+  // If there are none, build the object
+  if (ugPrefs === null) {
+    ugPrefs = {};
+    ugPrefs[application.pathname] = {};
+  }
+
+  // Build an object to store this page's preferences
+  let appPrefs = {};
+
+  // Store this session's preferences in the new object
+  const grabChecked = document.querySelectorAll('input:checked');
+  for (let i = 0; i < grabChecked.length; i++) {
+    appPrefs[`${grabChecked[i].value}`] = true;
+  }
+
+  // Overwrite the old session's preferences with the new one
+  ugPrefs[location.pathname] = appPrefs;
+
+  // Write the object
+  localStorage.setItem('ugPrefs', JSON.stringify(ugPrefs));
 }
