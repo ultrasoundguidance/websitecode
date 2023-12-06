@@ -5,7 +5,6 @@
  * Used on procedure and index pages to remove tags from
  * display and the generated table of contents.
  */
-
 $('.postItem:empty').parent().remove();
 
 buildChecks();
@@ -16,7 +15,6 @@ buildChecks();
  * event handlers, then adds the list-item checkboxes to the DOM.
  * On first display, calls a function to check for extant preferences.
  */
-
 function buildChecks() {
   // Pull all elements with custom data-slug value
   const grabTags = document.querySelectorAll('[data-slug]');
@@ -91,7 +89,6 @@ function buildChecks() {
  *   - >=1 box is checked, toggles display of this category.
  * After resolving display, writes preferences to localStorage.
  */
-
 function checkBoxHandler(inputId, evt) {
   const checked = getBoxes('CHECKED');
   const unchecked = getBoxes('UNCHECKED');
@@ -135,7 +132,6 @@ function checkBoxHandler(inputId, evt) {
  * preferences. If any previous sessions stored checked box values,
  * change display to reflect the last visit's state.
  */
-
 function firstRender() {
   const checked = getBoxes('CHECKED');
   if (checked.length > 0) {
@@ -192,6 +188,8 @@ function getBoxes(KIND) {
       return document.querySelectorAll('input:not(:checked)');
     case 'CATEGORIES':
       return document.querySelectorAll('[data-visibility]');
+    case 'BOXES':
+      return document.querySelectorAll('input[type="checkbox"]');
   }
 }
 
@@ -208,17 +206,50 @@ function getPreferences() {
   const maxLength = 2000;
 
   let appPrefs = sanitizePreferences(appPath, maxLength);
+  return appPrefs;
 }
 
+/**
+ * Get string data from localStorage and cap at appropriate length.
+ * Then parse the string data and compare to categories on the page.
+ * Only load data that matches categories on the page, and manually
+ * assign 'true' values, instead of relying on data stored in
+ * localStorage.
+ */
 function sanitizePreferences(appPath, maxLength) {
   // Pull string data
   let ugPrefs = localStorage.getItem('ugPrefs');
 
-  // Prevent overruns
-  if (ugPrefs.length > maxLength) {
-    return {};
+  if (ugPrefs !== null) {
+    // Prevent overruns
+    if (ugPrefs.length > maxLength) {
+      return {};
+    }
+
+    // Load categories
+    const categoryDivs = getBoxes('BOXES');
+    let categories = [];
+    for (i = 0; i < categoryDivs.length; i++) {
+      categories.push(categoryDivs[i].value);
+    }
+
+    // Pull parsed JSON preferences
+    ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
+
+    // Adjust for page preferences instead of global object
+    let initialPrefs = ugPrefs[appPath];
+    let sanitizedPrefs = {};
+
+    // Check if page preferences are valid categories
+    for (initialPref in initialPrefs) {
+      if (categories.includes(initialPref)) {
+        sanitizedPrefs[`${initialPref}`] = true;
+      }
+    }
+
+    return sanitizedPrefs;
   }
 
-  // Make sure properties in loaded preferences are valid properties
-  const categories = getBoxes('CATEGORIES');
+  // If there are no preferences, return empty object
+  return {};
 }
