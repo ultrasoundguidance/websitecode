@@ -31,15 +31,16 @@ function buildChecks() {
   const tagBlock = document.getElementById('toc-list');
 
   let ugPrefs;
+  let appPath = [location.pathname];
   let appPrefs;
   ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
 
   if (ugPrefs != null) {
-    if (location.pathname in ugPrefs) {
-      appPrefs = ugPrefs[location.pathname];
-    } else {
-      appPrefs = null;
+    if (appPath in ugPrefs) {
+      appPrefs = ugPrefs[appPath];
     }
+  } else {
+    appPrefs = {};
   }
 
   // (1.) Loop through list of elements with slugs
@@ -74,8 +75,8 @@ function buildChecks() {
     newLi.appendChild(newInput);
     newLi.appendChild(newInputLabel);
 
-    if (appPrefs !== null) {
-      if (newInput.value in ugPrefs[location.pathname]) {
+    if (appPrefs != null) {
+      if (newInput.value in appPrefs) {
         newInput.checked = true;
       }
     }
