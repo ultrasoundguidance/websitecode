@@ -95,7 +95,7 @@ function buildChecks() {
 function checkBoxHandler(inputId, evt) {
   const checked = getBoxes('CHECKED');
   const unchecked = getBoxes('UNCHECKED');
-  const categories = document.querySelectorAll('[data-visibility]');
+  const categories = getBoxes('CATEGORIES');
 
   // (1.b.) If no boxes are checked,
   if (checked.length == 0) {
@@ -185,10 +185,13 @@ function setPreferences() {
  * Simple function to return a list of un/checked boxes as NodeLists.
  */
 function getBoxes(KIND) {
-  if (KIND === 'CHECKED') {
-    return document.querySelectorAll('input:checked');
-  } else if (KIND === 'UNCHECKED') {
-    return document.querySelectorAll('input:not(:checked)');
+  switch (KIND) {
+    case 'CHECKED':
+      return document.querySelectorAll('input:checked');
+    case 'UNCHECKED':
+      return document.querySelectorAll('input:not(:checked)');
+    case 'CATEGORIES':
+      return document.querySelectorAll('[data-visibility]');
   }
 }
 
@@ -201,17 +204,21 @@ function getBoxes(KIND) {
  */
 function getPreferences() {
   // Check if there are preferences in localStorage
-  let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
-  let appPath = [location.pathname];
+  const appPath = [location.pathname];
+  const maxLength = 2000;
 
-  // Check if there are items in the preferences
-  if (ugPrefs === null) {
-    return null;
-  } else {
-    appPrefs = sanitizePreferences(ugPrefs, appPath);
-  }
+  let appPrefs = sanitizePreferences(appPath, maxLength);
 }
 
-function sanitizePreferences(ugPrefs, pathname) {
-  //
+function sanitizePreferences(appPath, maxLength) {
+  // Pull string data
+  let ugPrefs = localStorage.getItem('ugPrefs');
+
+  // Prevent overruns
+  if (ugPrefs.length > maxLength) {
+    return {};
+  }
+
+  // Make sure properties in loaded preferences are valid properties
+  const categories = getBoxes('CATEGORIES');
 }
