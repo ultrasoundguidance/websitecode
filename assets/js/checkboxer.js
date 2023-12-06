@@ -170,3 +170,18 @@ function getBoxes(KIND) {
     return document.querySelectorAll('input:not(:checked)');
   }
 }
+
+function getPreferences() {
+  // Check if there are preferences in localStorage
+  let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
+  let appPath = [location.pathname];
+
+  // Check if there are items in the preferences
+  if (ugPrefs === null) {
+    return null;
+  } else {
+    appPrefs = sanitizePreferences(ugPrefs, appPath);
+  }
+}
+
+function sanitizePreferences(ugPrefs, pathname) {}
