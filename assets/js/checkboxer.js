@@ -1,25 +1,21 @@
 /* eslint-env browser */
 
 /**
- * Remove parent divs when one particular child is empty
+ * Remove parent divs when one particular child is empty.
  * Used on procedure and index pages to remove tags from
  * display and the generated table of contents.
  */
 
 $('.postItem:empty').parent().remove();
 
-/**
- * Pull elements with custom data-slug value, then
- * build list items with checkboxes and labels,
- * apply custom Tailwind styling, and add them to
- * the DOM.
- *
- * If no boxes are checked, display all categories.
- *
- *
- */
-
 buildChecks();
+
+/**
+ * Create an unordered list of checkboxes from headings with
+ * the data-slug attribute. Adds labels, Tailwind styling, and
+ * event handlers, then adds the list-item checkboxes to the DOM.
+ * On first display, calls a function to check for extant preferences.
+ */
 
 function buildChecks() {
   // Pull all elements with custom data-slug value
@@ -59,7 +55,10 @@ function buildChecks() {
     newInput.name = grabTags[i].textContent.trim();
 
     // (2.a.i) Add event listener to checkbox
-    newInput.addEventListener('click', renderBoxes.bind(null, newInput.value));
+    newInput.addEventListener(
+      'click',
+      checkBoxHandler.bind(null, newInput.value)
+    );
 
     // (2.b.) and labels for those checkboxes
     let newInputLabel = document.createElement('label');
@@ -84,7 +83,15 @@ function buildChecks() {
   firstRender();
 }
 
-function renderBoxes(inputId, evt) {
+/**
+ * On click, examines state of all checkboxes. If:
+ *   - No boxes are checked, displays all categories.
+ *   - 1 box is checked, hides all other categories.
+ *   - >=1 box is checked, toggles display of this category.
+ * After resolving display, writes preferences to localStorage.
+ */
+
+function checkBoxHandler(inputId, evt) {
   const checked = getBoxes('CHECKED');
   const unchecked = getBoxes('UNCHECKED');
   const categories = document.querySelectorAll('[data-visibility]');
@@ -122,6 +129,12 @@ function renderBoxes(inputId, evt) {
   setPreferences();
 }
 
+/**
+ * After buildChecks() runs on page initialization, check for stored
+ * preferences. If any previous sessions stored checked box values,
+ * change display to reflect the last visit's state.
+ */
+
 function firstRender() {
   const checked = getBoxes('CHECKED');
   if (checked.length > 0) {
@@ -135,6 +148,10 @@ function firstRender() {
   }
 }
 
+/**
+ * Builds an object to store the state of all checkboxes. Then,
+ * writes the object to localStorage as a string.
+ */
 function setPreferences() {
   // Get existing preferences
   let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
@@ -163,6 +180,9 @@ function setPreferences() {
   localStorage.setItem('ugPrefs', JSON.stringify(ugPrefs));
 }
 
+/**
+ * Simple function to return a list of un/checked boxes as NodeLists.
+ */
 function getBoxes(KIND) {
   if (KIND === 'CHECKED') {
     return document.querySelectorAll('input:checked');
@@ -171,6 +191,13 @@ function getBoxes(KIND) {
   }
 }
 
+/**
+ * Read preferences from localStorage. Sanitizes the inputs by
+ * comparing the list of keys read in to a list of all categories
+ * present on the page, and discarding anything that either
+ *   (1) doesn't match a category name
+     (2) isn't a boolean.
+ */
 function getPreferences() {
   // Check if there are preferences in localStorage
   let ugPrefs = JSON.parse(localStorage.getItem('ugPrefs'));
@@ -184,4 +211,6 @@ function getPreferences() {
   }
 }
 
-function sanitizePreferences(ugPrefs, pathname) {}
+function sanitizePreferences(ugPrefs, pathname) {
+  //
+}
