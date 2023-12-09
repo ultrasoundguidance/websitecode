@@ -105,10 +105,10 @@ function checkBoxHandler(inputId, evt) {
     for (category of categories) {
       // (2.d) and loop through all unchecked boxes
 
-      for (j = 0; j < unchecked.length; j++) {
+      for (uncheck of unchecked) {
         // (2.e.) and if a category is unchecked,
 
-        if (category.dataset.visibility == unchecked[j].value) {
+        if (category.dataset.visibility == uncheck.value) {
           // (2.f.) then hide it
 
           category.classList.add('hidden');
