@@ -165,8 +165,8 @@ function setPreferences() {
   // Store this session's preferences in the new object
   const checked = getBoxes('CHECKED');
   if (checked.length > 0) {
-    for (let i = 0; i < checked.length; i++) {
-      appPrefs[`${checked[i].value}`] = true;
+    for (check of checked) {
+      appPrefs[`${check.value}`] = true;
     }
   }
 
