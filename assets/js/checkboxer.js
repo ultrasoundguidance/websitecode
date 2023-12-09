@@ -102,16 +102,16 @@ function checkBoxHandler(inputId, evt) {
     // (2.b) If this is the only unchecked box
     // (2.c) Loop through all categories
 
-    for (i = 0; i < categories.length; i++) {
+    for (category of categories) {
       // (2.d) and loop through all unchecked boxes
 
       for (j = 0; j < unchecked.length; j++) {
         // (2.e.) and if a category is unchecked,
 
-        if (categories[i].dataset.visibility == unchecked[j].value) {
+        if (category.dataset.visibility == unchecked[j].value) {
           // (2.f.) then hide it
 
-          categories[i].classList.add('hidden');
+          category.classList.add('hidden');
         }
       }
     }
