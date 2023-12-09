@@ -136,9 +136,9 @@ function firstRender() {
   const checked = getBoxes('CHECKED');
   if (checked.length > 0) {
     const unchecked = getBoxes('UNCHECKED');
-    for (i = 0; i < unchecked.length; i++) {
+    for (uncheck of unchecked) {
       const categoryToHide = document.querySelector(
-        `[data-visibility=${CSS.escape(unchecked[i].value)}]`
+        `[data-visibility=${CSS.escape(uncheck.value)}]`
       );
       categoryToHide.classList.toggle('hidden');
     }
