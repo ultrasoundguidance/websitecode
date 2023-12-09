@@ -42,7 +42,7 @@ function buildChecks() {
   }
 
   // (1.) Loop through list of elements with slugs
-  for (i = 0; i < grabTags.length; i++) {
+  for (tag of grabTags) {
     // (1.) Create new list items to hold the elements
     let newLi = document.createElement('li');
     newLi.className = 'toc-list-item';
@@ -50,8 +50,8 @@ function buildChecks() {
     // (2.a.) Create new checkboxes
     let newInput = document.createElement('input');
     newInput.type = 'checkbox';
-    newInput.value = grabTags[i].id;
-    newInput.name = grabTags[i].textContent.trim();
+    newInput.value = tag.id;
+    newInput.name = tag.textContent.trim();
 
     // (2.a.i) Add event listener to checkbox
     newInput.addEventListener(
@@ -62,7 +62,7 @@ function buildChecks() {
     // (2.b.) and labels for those checkboxes
     let newInputLabel = document.createElement('label');
     newInputLabel.htmlFor = newInput.value;
-    newInputLabel.textContent = grabTags[i].textContent.trim();
+    newInputLabel.textContent = tag.textContent.trim();
 
     // (3.) Add Tailwind styling
     newInput.classList = inputAssignedClasses;
