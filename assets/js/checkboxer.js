@@ -229,8 +229,8 @@ function sanitizePreferences(appPath, maxLength) {
     // Load categories
     const categoryDivs = getBoxes('BOXES');
     let categories = [];
-    for (i = 0; i < categoryDivs.length; i++) {
-      categories.push(categoryDivs[i].value);
+    for (categoryDiv of categoryDivs) {
+      categories.push(categoryDiv.value);
     }
 
     // Pull parsed JSON preferences
