@@ -1,13 +1,45 @@
 <div class="overflow-hidden transition-shadow duration-300 rounded">
-	<a href="{{url}}" aria-label="{{title}}">
-		<img 
-			src="{{#if custom_excerpt}}{{excerpt}}{{else}}{{asset "images/ultrasound@3x.jpg"}}{{/if}}" class="object-cover w-full h-64 rounded object-left" 
-			alt="{{title}}" 
-		/>
-	</a>
+	<div class="video-container" style="position: relative; display: flex; max-width: 510px;">
+		<div class="video-controls-container"
+			style="position: absolute; bottom: 0; left: 0; right: 0; color: white;  background-color: rgb(0, 0, 0, .5);">
+			<div class="timeline-container" id="{{this.id}}" style="hight: 10px;">
+				<div class="timeline"></div>
+			</div>
+		</div>
+		<a href="{{url}}" aria-label="{{title}}">
+			<img src="{{#if custom_excerpt}}{{excerpt}}{{else}}{{asset " images/ultrasound@3x.jpg"}}{{/if}}"
+				class="object-cover w-full h-64 rounded object-left" alt="{{title}}" />
+			</a>
+	</div>
 	<div class="py-5">
 		<a href="{{url}}" aria-label="Article" class="inline-block mb-3 lnk">
 			<p class="text-2xl font-bold leading-5">{{title}}</p>
 		</a>
 	</div>
 </div>
+<script>
+	// Duration
+	var currentTimeElem = document.querySelectorAll(".current-time")
+	var totalTimeElem = document.querySelectorAll(".total-time")
+
+	var leadingZeroFormatter = new Intl.NumberFormat(undefined, {
+		minimumIntegerDigits: 2,
+	})
+	function formatDuration(time) {
+		const seconds = Math.floor(time % 60)
+		const minutes = Math.floor(time / 60) % 60
+		const hours = Math.floor(time / 3600)
+		if (hours === 0) {
+			return `${minutes}:${leadingZeroFormatter.format(seconds)}`
+		} else {
+			return `${hours}:${leadingZeroFormatter.format(
+				minutes
+			)}:${leadingZeroFormatter.format(seconds)}`
+		}
+	}
+
+	totalTimeElem.forEach((item) => {
+		// this needs to be seconds 
+		item.textContent = formatDuration(30)
+	})
+</script>

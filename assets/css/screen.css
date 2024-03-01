@@ -379,3 +379,20 @@ Ghost editor. */
 
 /* TocBot styling
 /* ---------------------------------------------------------- */
+
+.timeline {
+  background-color: rgba(100, 100, 100, .5);
+  height: 8px;
+  width: 100%;
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: calc(100% - var(--progress-position) * 100%);
+  background-color: rgb(114 239 221);
+}

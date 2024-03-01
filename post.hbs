@@ -3,7 +3,7 @@
 	{{> "decorators/svg-post"}}
 	<div class="relative px-4 sm:px-6 lg:px-8">
 		{{#post}}
-			<div class="text-lg max-w-prose mx-auto">
+			<div id="post" data-post-id="{{id}}" data-member-email="{{@member.email}}" class="text-lg max-w-prose mx-auto">
 				<h1>
 					<span class="block text-base text-center font-semibold tracking-wide uppercase"></span>
 					<span class="mt-2 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">{{title}}</span>
@@ -13,11 +13,25 @@
 							{{#foreach tags}}
 								{{^if @first}} | {{/if}}<a class="lnk" href="{{url}}">{{name}}</a>
 							{{/foreach}}
-					</span>
-						{{/if}}</h1>
+							</span>
+						{{/if}}
+				</h1>
 			</div>
 			<div class="mt-6 prose prose-lg mx-auto gh-content">
 				{{content}}
+			</div>
+			<div class="mt-6 prose prose-lg mx-auto gh-content">
+				<!-- Form Modal -->
+				<div id="myModal" style="background-color: rgb(0, 0, 0, 0.4); position: fixed; z-index: 1;"
+					class="hidden left-0 top-0 w-full h-full">
+					<div id="form-container" style="margin: 15% auto; max-width: 500px;" class="p-5 border rounded-xl bg-white">
+							<button id="closeBtn" style="font-family: Sk-Modernist-Regular; font-weight: 500; float: right;">X</button>
+						<h2 style="margin-top: 20px;" class="hero-feature-title">Answer the following Questions</h2>
+						<form class="form">
+							<button class="btn submit-form" type="submit" style="margin-top: 15px;">Submit</button>
+						</form>
+					</div>
+				</div>
 			</div>
 		{{/post}}
 	</div>

@@ -7,7 +7,7 @@
 					<span class="mt-2 block text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl"><a href="{{url}}">{{name}}</a></span>
 				</h1>
 			</div>
-			<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full postItem">
+			<div class="grid gap-5 lg:grid-cols-4 sm:max-w-sm sm:mx-auto lg:max-w-full postItem" data-member-email="{{@member.email}}">
 				{{#get "posts" limit="all" include="tags" filter="tag:{{slug}}"}}
 					{{#foreach posts}}
 						{{^has tag="#procedure"}}
