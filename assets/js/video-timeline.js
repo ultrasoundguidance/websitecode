@@ -17,5 +17,5 @@ if (postItem) {
     })
     .catch((error) => {
       console.log("Error getting document:", error);
-    }); 
+    });
 }

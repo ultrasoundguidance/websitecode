@@ -146,8 +146,9 @@ if (postData && iframe) {
 
   // Video Ended
   player.on('ended', () => {
-    getForm()
-    modal.style.display = "block"
+    // Uncomment when ready to use forms
+    // getForm()
+    // modal.style.display = "block"
 
     player.getDuration().then((duration) => {
       firebaseDB.collection("users").doc(postData.dataset.memberEmail).set({
