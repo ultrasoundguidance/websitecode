@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('load', function () {
   const postItem = document.querySelector(".postItem")
 
   if (postItem) {

@@ -19,7 +19,17 @@
         {{/get}}
        </div>
    </div>
-<br />
+</div>
+<div class="relative flex flex-row justify-center my-16 py-16 lg:pt-0 lg:flex-col lg:pb-0">
+   <div class="flex justify-center px-4 mx-auto lg:px-8 lg:max-w-screen-xl" style="flex-wrap: wrap;">
+      {{#get "posts" filter="slug:mobile-app"}}
+               {{#foreach posts}}
+                  {{content}}
+               {{/foreach}}
+            {{/get}}
+   </div>
+</div>
+
 
 {{> "hero/bullet-features"}}
 
