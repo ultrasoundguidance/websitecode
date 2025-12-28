@@ -1,0 +1,44 @@
+{{!< default}} <div
+    class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
+    <div class="text-lg max-w-prose mx-auto">
+        {{#if @member}}
+        <h1>
+            <span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">
+                Question Bank
+            </span>
+        </h1>
+        <div id="exam-history" data-member-id="{{@member.uuid}}">
+            <ul id="exam-list">
+            </ul>
+            <div class="text-gray-500 py-4 hidden" id="no-exams-message">No exam history found</div>
+            <div class="text-red-500 py-4 hidden" id="error-message">Error loading exam history</div>
+        </div>
+
+        <!-- Hidden template for exam items -->
+        <template id="exam-item-template">
+            <li class="mb-5">
+                <div class="overflow-hidden transition-shadow duration-300 rounded">
+                    <div class="py-5 px-4 border border-gray-200 rounded">
+                        <div class="mb-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <span
+                                    class="text-base font-semibold tracking-wide text-gray-700 dark:text-gray-300 exam-date"></span>
+                                <span
+                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-green-200 text-green-800 exam-status-complete hidden">Complete</span>
+                                <span
+                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-yellow-200 text-yellow-800 exam-status-progress hidden">In
+                                    Progress</span>
+                            </div>
+                            <p class="text-lg font-bold leading-5 mb-2">
+                                <span class="text-2xl font-bold exam-question-count"></span> Questions
+                            </p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 exam-tags">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </template>
+        {{/if}}
+    </div>
+    </div>
