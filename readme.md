@@ -9,6 +9,9 @@ Designed by [a human online](https://ahuman.online), made for [Ultrasound Guidan
 3. Setup Stripe webhooks to work with Stripe locally by following these [instructions](https://ghost.org/docs/webhooks/#stripe-webhooks). Make sure your Local listener webhook in your Stripe account has a status of Listening.
 4. When you're ready to deploy your custom theme, run `npm run zip`. This will compress your theme files into a zip file that's ready to upload to Ghost.
 
+Note: 
+- When editing .js files run `npx gulp` for automatic rebuilding. To rebuild the bundle run `npx gulp build`.
+
 ## Editing site copy
 The copy that appears on the homepage is sourced from entries in Ghost. To edit the homepage copy, you should edit the entries.
 

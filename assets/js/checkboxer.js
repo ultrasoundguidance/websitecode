@@ -16,6 +16,14 @@ buildChecks();
  * On first display, calls a function to check for extant preferences.
  */
 function buildChecks() {
+  // Root element to build lists inside of
+  const tagBlock = document.getElementById('toc-list');
+
+  // Exit early if there's no toc-list element on this page
+  if (!tagBlock) {
+    return;
+  }
+
   // Pull all elements with custom data-slug value
   const grabTags = document.querySelectorAll('[data-slug]');
 
@@ -24,9 +32,6 @@ function buildChecks() {
     'mr-4 form-check text-primary-900 dark:text-accent-400 rounded';
   const labelAssignedClasses =
     'text-primary-900 dark:text-accent-400 font-medium';
-
-  // Root element to build lists inside of
-  const tagBlock = document.getElementById('toc-list');
 
   let ugPrefs;
   let appPath = [location.pathname];

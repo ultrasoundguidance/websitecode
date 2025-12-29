@@ -1,26 +1,24 @@
-// Get member email from the page (already used throughout your code)
 window.addEventListener('DOMContentLoaded', function () {
     var postData = document.querySelector("#exam-history");
 
     if (!postData) {
-        console.log('Not on qbank page');
         return;
     }
 
     var memberId = postData.dataset.memberId;
 
     if (!memberId) {
-        console.error('No member ID found');
+        console.error('No member ID found on #exam-history element');
         return;
     }
+
+    console.log('Member ID found:', memberId);
 
     // Make the API call
     fetch(`http://127.0.0.1:8000/api/v1/exams/user/${memberId}`)
         .then(response => response.json())
         .then(data => {
             console.log('Exam data:', data);
-            console.log('this is the exam js')
-
 
             const examList = document.querySelector('#exam-list');
             const noExamsMessage = document.querySelector('#no-exams-message');
@@ -47,17 +45,16 @@ window.addEventListener('DOMContentLoaded', function () {
                     hour12: true
                 });
 
-                const tags = exam.tags ? exam.tags.map(value => value.name).join(", ") : 'No tags';
+                const tags = exam.tags ? exam.tags.map(value => value.name).join(", ") : '';
                 const questionCount = exam.question_count || exam.questions?.length || 0;
                 const isComplete = exam.completed_at || false;
-                console.log(exam.completed_at)
 
                 // Clone the template
                 const clone = template.content.cloneNode(true);
 
                 // Populate the data
                 clone.querySelector('.exam-date').textContent = date;
-                clone.querySelector('.exam-question-count').textContent = questionCount;
+                clone.querySelector('.exam-question-count').textContent = questionCount === 1 ? `${questionCount} Question` : `${questionCount} Questions`;
                 clone.querySelector('.exam-tags').textContent = tags;
 
                 // Set status badge
