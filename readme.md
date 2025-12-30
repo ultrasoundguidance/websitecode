@@ -10,13 +10,13 @@ Designed by [a human online](https://ahuman.online), made for [Ultrasound Guidan
 4. To send emails locally use [MailDrv](https://maildev.github.io/maildev/). First start the server with docker, `docker run -p 1080:1080 -p 1025:1025 soulteary/maildev` then access mail on http://localhost:1080/
    - Ensure the config.development.json file has
    ```
-   "mail": {
-    "transport": "SMTP",
-    "options": {
-      "port": 1025
+    "mail": {
+        "transport": "SMTP",
+        "options": {
+        "port": 1025
+        }
     }
-  }
-  ```
+
 5. When you're ready to deploy your custom theme, run `npm run zip`. This will compress your theme files into a zip file that's ready to upload to Ghost.
 
 Note: 
