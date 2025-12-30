@@ -7,10 +7,44 @@ window.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('#create-exam-form');
     const formMessage = document.querySelector('#form-message');
     const categoriesContainer = document.querySelector('#categories-container');
+    const modal = document.querySelector('#new-exam-modal');
+    const startNewExamBtn = document.querySelector('#start-new-exam');
+    const closeModalBtn = document.querySelector('#close-new-exam');
 
     if (!form) {
         console.log('Exam creator form not found on this page');
         return;
+    }
+
+    // Modal open/close handlers
+    if (startNewExamBtn && modal) {
+        startNewExamBtn.addEventListener('click', function () {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        });
+    }
+
+    if (closeModalBtn && modal) {
+        closeModalBtn.addEventListener('click', function () {
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        });
+
+        // Close modal when clicking outside of it
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
     }
 
     // Load categories from API
@@ -20,7 +54,7 @@ window.addEventListener('DOMContentLoaded', function () {
      * Fetch categories from the API and populate the form
      */
     function loadCategories() {
-        fetch('http://127.0.0.1:8000/api/v1/tags/')
+        fetch(`${API_BASE_URL}/api/v1/tags/`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -109,13 +143,11 @@ window.addEventListener('DOMContentLoaded', function () {
             examData.filters = [questionSelection];
         }
 
-        console.log('Creating exam with data:', examData);
-
         // Show loading state
         form.querySelector('button[type="submit"]').disabled = true;
 
         // Make API call to create exam
-        fetch('http://127.0.0.1:8000/api/v1/exams', {
+        fetch(`${API_BASE_URL}/api/v1/exams`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,19 +161,36 @@ window.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                showMessage('success', `Exam created successfully with ${data.question_count || questionCount} questions!`);
-
                 // Reset form
                 form.reset();
 
-                // Reload exam history if the exams.js is loaded
-                if (window.loadExamHistory) {
+                // Close modal immediately
+                if (modal) {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+
+                // Open the exam taker for the newly created exam
+                if (window.openExamTaker && data.exam_id) {
                     setTimeout(() => {
-                        window.loadExamHistory();
-                    }, 1000);
+                        window.openExamTaker(data.exam_id);
+                    }, 500); // Small delay to allow modal to close smoothly
                 } else {
-                    // Suggest page reload
-                    showMessage('success', 'Exam created! Refresh the page to see it in your history.');
+                    console.log('Cannot open exam taker:', {
+                        hasFunction: !!window.openExamTaker,
+                        hasId: !!data.exam_id,
+                        dataKeys: Object.keys(data)
+                    });
+                    
+                    if (window.loadExamHistory) {
+                        // Fallback to reloading exam history if openExamTaker is not available
+                        setTimeout(() => {
+                            window.loadExamHistory();
+                        }, 1000);
+                    } else {
+                        // Suggest page reload as last resort
+                        showMessage('success', 'Exam created! Refresh the page to see it in your history.');
+                    }
                 }
             })
             .catch(error => {

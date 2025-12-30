@@ -59,7 +59,9 @@ function js(done) {
 		src([
 			// pull in lib files first so our own code can depend on it
 			'assets/js/lib/*.js',
-			'assets/js/*.js'
+			'assets/js/*.js',
+			// Exclude config.js as it's loaded separately
+			'!assets/js/config.js'
 		], {sourcemaps: true}),
 		concat('sonar.js'),
 		uglify(),

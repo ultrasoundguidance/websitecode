@@ -15,9 +15,6 @@ const firebaseAuth = firebase.auth();
 // Sign in anonymously to enable authenticated storage access
 // This creates a session-based authentication for storage security rules
 firebaseAuth.signInAnonymously()
-  .then(() => {
-    console.log('Firebase: Authenticated successfully');
-  })
   .catch((error) => {
     console.error('Firebase: Authentication error:', error);
   });

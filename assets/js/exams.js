@@ -12,14 +12,21 @@ window.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    console.log('Member ID found:', memberId);
-
     // Exam viewer state
     let currentExamData = null;
     let currentQuestionIndex = 0;
 
+    // Exam taker state
+    let currentExamTakerData = null;
+    let currentQuestionTakerIndex = 0;
+    let selectedAnswerId = null;
+    let hasCheckedAnswer = false;
+
     // Load exam history
     loadExamHistory();
+
+    // Expose openExamTaker to window for external access (e.g., from exam-creator.js)
+    window.openExamTaker = openExamTaker;
 
     // Set up delete all button
     const deleteAllBtn = document.querySelector('#delete-all-exams');
@@ -47,11 +54,9 @@ window.addEventListener('DOMContentLoaded', function () {
         if (noExamsMessage) noExamsMessage.classList.add('hidden');
         if (errorMessage) errorMessage.classList.add('hidden');
 
-        fetch(`http://127.0.0.1:8000/api/v1/exams/user/${memberId}`)
+        fetch(`${API_BASE_URL}/api/v1/exams/user/${memberId}`)
             .then(response => response.json())
             .then(data => {
-                console.log('Exam data:', data);
-
                 // Hide loading indicator
                 if (loadingIndicator) loadingIndicator.classList.add('hidden');
 
@@ -109,13 +114,22 @@ window.addEventListener('DOMContentLoaded', function () {
                         statusProgress.classList.remove('hidden');
                     }
 
-                    // Show/hide view button based on completion status
+                    // Show/hide view and resume buttons based on completion status
                     const viewBtn = clone.querySelector('.view-exam-btn');
+                    const resumeBtn = clone.querySelector('.resume-exam-btn');
+                    
                     if (isComplete) {
                         viewBtn.classList.remove('hidden');
                         viewBtn.addEventListener('click', function (e) {
                             e.preventDefault();
                             openExamViewer(exam.id);
+                        });
+                    } else {
+                        // Show resume button for in-progress exams
+                        resumeBtn.classList.remove('hidden');
+                        resumeBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            openExamTaker(exam.id);
                         });
                     }
 
@@ -149,14 +163,13 @@ window.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        fetch(`http://127.0.0.1:8000/api/v1/exams/${examId}`, {
+        fetch(`${API_BASE_URL}/api/v1/exams/${examId}`, {
             method: 'DELETE'
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                console.log('Exam deleted successfully');
                 loadExamHistory();
             })
             .catch(error => {
@@ -173,7 +186,7 @@ window.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        fetch(`http://127.0.0.1:8000/api/v1/exams/${memberId}/all`, {
+        fetch(`${API_BASE_URL}/api/v1/exams/${memberId}/all`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -190,16 +203,15 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * Set up exam viewer modal controls
+     * Set up exam viewer controls
      */
     function setupExamViewer() {
-        const modal = document.querySelector('#exam-viewer-modal');
-        const closeBtn = document.querySelector('#close-viewer');
+        const backBtn = document.querySelector('#back-to-history');
         const prevBtn = document.querySelector('#prev-question');
         const nextBtn = document.querySelector('#next-question');
 
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeExamViewer);
+        if (backBtn) {
+            backBtn.addEventListener('click', closeExamViewer);
         }
 
         if (prevBtn) {
@@ -210,13 +222,31 @@ window.addEventListener('DOMContentLoaded', function () {
             nextBtn.addEventListener('click', () => navigateQuestion(1));
         }
 
-        // Close modal when clicking outside
-        if (modal) {
-            modal.addEventListener('click', function (e) {
-                if (e.target === modal) {
-                    closeExamViewer();
-                }
-            });
+        // Set up exam taker controls
+        const backBtnTaker = document.querySelector('#back-to-history-taker');
+        const prevBtnTaker = document.querySelector('#prev-question-taker');
+        const nextBtnTaker = document.querySelector('#next-question-taker');
+        const checkAnswerBtn = document.querySelector('#check-answer-btn');
+
+        if (backBtnTaker) {
+            backBtnTaker.addEventListener('click', closeExamTaker);
+        }
+
+        if (prevBtnTaker) {
+            prevBtnTaker.addEventListener('click', () => navigateQuestionTaker(-1));
+        }
+
+        if (nextBtnTaker) {
+            nextBtnTaker.addEventListener('click', () => navigateQuestionTaker(1));
+        }
+
+        if (checkAnswerBtn) {
+            checkAnswerBtn.addEventListener('click', checkAnswer);
+        }
+
+        const submitExamBtn = document.querySelector('#submit-exam-btn');
+        if (submitExamBtn) {
+            submitExamBtn.addEventListener('click', submitExam);
         }
     }
 
@@ -224,21 +254,26 @@ window.addEventListener('DOMContentLoaded', function () {
      * Open exam viewer with exam ID
      */
     function openExamViewer(examId) {
-        const modal = document.querySelector('#exam-viewer-modal');
+        const historySection = document.querySelector('#exam-history-section');
+        const viewerSection = document.querySelector('#exam-viewer-section');
         const loadingState = document.querySelector('#viewer-loading');
         const errorState = document.querySelector('#viewer-error');
         const questionDisplay = document.querySelector('#question-display');
 
-        if (!modal) return;
+        if (!viewerSection) return;
 
-        // Show modal and loading state
-        modal.classList.remove('hidden');
+        // Hide history and show viewer with loading state
+        if (historySection) historySection.classList.add('hidden');
+        viewerSection.classList.remove('hidden');
         if (loadingState) loadingState.classList.remove('hidden');
         if (errorState) errorState.classList.add('hidden');
         if (questionDisplay) questionDisplay.classList.add('hidden');
+        
+        // Scroll to top of page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // Fetch exam data
-        fetch(`http://127.0.0.1:8000/api/v1/exams/${examId}`)
+        fetch(`${API_BASE_URL}/api/v1/exams/${examId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -264,12 +299,21 @@ window.addEventListener('DOMContentLoaded', function () {
      * Close exam viewer
      */
     function closeExamViewer() {
-        const modal = document.querySelector('#exam-viewer-modal');
-        if (modal) {
-            modal.classList.add('hidden');
+        const historySection = document.querySelector('#exam-history-section');
+        const viewerSection = document.querySelector('#exam-viewer-section');
+        
+        if (viewerSection) {
+            viewerSection.classList.add('hidden');
         }
+        if (historySection) {
+            historySection.classList.remove('hidden');
+        }
+        
         currentExamData = null;
         currentQuestionIndex = 0;
+        
+        // Scroll to top of page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     /**
@@ -294,7 +338,6 @@ window.addEventListener('DOMContentLoaded', function () {
      * Display the current question
      */
     function displayQuestion() {
-        console.log(currentExamData)
         if (!currentExamData || !currentExamData.questions) return;
 
         const question = currentExamData.questions[currentQuestionIndex];
@@ -543,6 +586,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     const video = document.createElement('video');
                     video.src = url;
                     video.controls = true;
+                    video.controlsList = 'nodownload';
                     video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
                     video.style.maxWidth = '100%';
                     video.style.height = 'auto';
@@ -587,6 +631,626 @@ window.addEventListener('DOMContentLoaded', function () {
                 console.error('Error loading question media:', error);
                 console.error('Storage path attempted:', storagePath);
                 mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load image: ' + error.message + '</span></div>';
+            });
+    }
+
+    /**
+     * Open exam taker for in-progress exam
+     */
+    function openExamTaker(examId) {
+        const historySection = document.querySelector('#exam-history-section');
+        const takerSection = document.querySelector('#exam-taker-section');
+        const loadingState = document.querySelector('#taker-loading');
+        const errorState = document.querySelector('#taker-error');
+        const questionDisplay = document.querySelector('#question-display-taker');
+
+        if (!takerSection) return;
+
+        // Hide history and show taker with loading state
+        if (historySection) historySection.classList.add('hidden');
+        takerSection.classList.remove('hidden');
+        if (loadingState) loadingState.classList.remove('hidden');
+        if (errorState) errorState.classList.add('hidden');
+        if (questionDisplay) questionDisplay.classList.add('hidden');
+        
+        // Scroll to top of page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Fetch exam data
+        fetch(`${API_BASE_URL}/api/v1/exams/${examId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                currentExamTakerData = data;
+                
+                // Find the first unanswered question or start from beginning
+                currentQuestionTakerIndex = 0;
+                for (let i = 0; i < data.questions.length; i++) {
+                    if (!data.questions[i].user_answer_id) {
+                        currentQuestionTakerIndex = i;
+                        break;
+                    }
+                }
+                
+                displayQuestionTaker();
+                
+                if (loadingState) loadingState.classList.add('hidden');
+                if (questionDisplay) questionDisplay.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error loading exam:', error);
+                if (loadingState) loadingState.classList.add('hidden');
+                if (errorState) errorState.classList.remove('hidden');
+            });
+    }
+
+    /**
+     * Close exam taker
+     */
+    function closeExamTaker() {
+        const historySection = document.querySelector('#exam-history-section');
+        const takerSection = document.querySelector('#exam-taker-section');
+        
+        if (takerSection) {
+            takerSection.classList.add('hidden');
+        }
+        if (historySection) {
+            historySection.classList.remove('hidden');
+        }
+        
+        currentExamTakerData = null;
+        currentQuestionTakerIndex = 0;
+        selectedAnswerId = null;
+        hasCheckedAnswer = false;
+        
+        // Reload exam history to reflect any changes
+        loadExamHistory();
+        
+        // Scroll to top of page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * Navigate to next or previous question in taker
+     */
+    function navigateQuestionTaker(direction) {
+        if (!currentExamTakerData || !currentExamTakerData.questions) return;
+
+        // Only allow navigation if current question has been answered
+        const currentQuestion = currentExamTakerData.questions[currentQuestionTakerIndex];
+        
+        currentQuestionTakerIndex += direction;
+        
+        // Ensure index stays within bounds
+        if (currentQuestionTakerIndex < 0) {
+            currentQuestionTakerIndex = 0;
+        } else if (currentQuestionTakerIndex >= currentExamTakerData.questions.length) {
+            currentQuestionTakerIndex = currentExamTakerData.questions.length - 1;
+        }
+
+        displayQuestionTaker();
+    }
+
+    /**
+     * Display the current question in taker mode
+     */
+    function displayQuestionTaker() {
+        if (!currentExamTakerData || !currentExamTakerData.questions) return;
+
+        const question = currentExamTakerData.questions[currentQuestionTakerIndex];
+        const totalQuestions = currentExamTakerData.questions.length;
+
+        // Reset state for new question
+        selectedAnswerId = null;
+        hasCheckedAnswer = false;
+
+        // Check if this question was already answered
+        if (question.user_answer_id) {
+            selectedAnswerId = question.user_answer_id;
+            hasCheckedAnswer = true;
+        }
+
+        // Update question number display
+        const currentNumEl = document.querySelector('#current-question-num-taker');
+        const totalQuestionsEl = document.querySelector('#total-questions-taker');
+        if (currentNumEl) currentNumEl.textContent = currentQuestionTakerIndex + 1;
+        if (totalQuestionsEl) totalQuestionsEl.textContent = totalQuestions;
+
+        // Update navigation buttons
+        const prevBtn = document.querySelector('#prev-question-taker');
+        const nextBtn = document.querySelector('#next-question-taker');
+        if (prevBtn) {
+            prevBtn.disabled = currentQuestionTakerIndex === 0;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = currentQuestionTakerIndex === totalQuestions - 1;
+        }
+
+        // Display question text
+        const questionText = document.querySelector('#question-text-taker');
+        if (questionText) {
+            questionText.textContent = question.prompt || 'Question text not available';
+        }
+
+        // Display question media if available
+        displayQuestionMediaTaker(question);
+
+        // Display answer choices
+        displayAnswerChoicesTaker(question);
+
+        // Update check button state
+        const checkBtn = document.querySelector('#check-answer-btn');
+        if (checkBtn) {
+            if (hasCheckedAnswer) {
+                checkBtn.classList.add('hidden');
+            } else {
+                checkBtn.classList.remove('hidden');
+                checkBtn.textContent = 'Check Answer';
+                checkBtn.disabled = !selectedAnswerId;
+            }
+        }
+
+        // Show/hide result and explanation based on whether answer was checked
+        const resultIndicator = document.querySelector('#result-indicator-taker');
+        const explanationSection = document.querySelector('#explanation-section-taker');
+        
+        if (hasCheckedAnswer) {
+            displayResultTaker(question);
+            if (resultIndicator) resultIndicator.classList.remove('hidden');
+            if (explanationSection) {
+                explanationSection.classList.remove('hidden');
+                const explanationText = document.querySelector('#explanation-text-taker');
+                if (explanationText) {
+                    explanationText.textContent = question.explanation || 'No explanation available for this question.';
+                }
+            }
+        } else {
+            if (resultIndicator) resultIndicator.classList.add('hidden');
+            if (explanationSection) explanationSection.classList.add('hidden');
+        }
+
+        // Check if all questions are answered and show/hide submit button
+        updateSubmitButtonVisibility();
+    }
+
+    /**
+     * Display answer choices in taker mode with selection capability
+     */
+    function displayAnswerChoicesTaker(question) {
+        const answersContainer = document.querySelector('#answer-choices-taker');
+        const answerChoices = question.answer_choices;
+        
+        if (!answersContainer || !answerChoices) return;
+        
+        answersContainer.innerHTML = '';
+        
+        answerChoices.forEach((answer, index) => {
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'p-3 rounded transition-all cursor-pointer';
+            answerDiv.style.border = '2px solid';
+            answerDiv.style.cursor = hasCheckedAnswer ? 'default' : 'pointer';
+            
+            const isSelected = selectedAnswerId === answer.id;
+            const isCorrect = answer.is_correct;
+            
+            // Apply styling based on selection and check status
+            if (hasCheckedAnswer) {
+                // Show correct/incorrect after checking
+                if (isCorrect && isSelected) {
+                    answerDiv.style.borderColor = '#16a34a';
+                    answerDiv.style.backgroundColor = '#dcfce7';
+                } else if (isCorrect) {
+                    answerDiv.style.borderColor = '#22c55e';
+                    answerDiv.style.backgroundColor = '#f0fdf4';
+                } else if (isSelected) {
+                    answerDiv.style.borderColor = '#dc2626';
+                    answerDiv.style.backgroundColor = '#fee2e2';
+                } else {
+                    answerDiv.style.borderColor = '#d1d5db';
+                    answerDiv.style.backgroundColor = '#f9fafb';
+                }
+            } else {
+                // Show selected state before checking
+                if (isSelected) {
+                    answerDiv.style.borderColor = '#2563eb';
+                    answerDiv.style.backgroundColor = '#dbeafe';
+                } else {
+                    answerDiv.style.borderColor = '#d1d5db';
+                    answerDiv.style.backgroundColor = '#ffffff';
+                }
+            }
+            
+            const answerLabel = document.createElement('div');
+            answerLabel.className = 'flex items-start';
+            
+            const labelText = document.createElement('span');
+            labelText.className = 'font-semibold mr-2';
+            labelText.style.fontWeight = '600';
+            labelText.style.marginRight = '0.5rem';
+            labelText.style.minWidth = '1.5rem';
+            labelText.textContent = String.fromCharCode(65 + index) + '.';
+            
+            const answerText = document.createElement('span');
+            answerText.className = 'flex-1';
+            answerText.textContent = answer.answer_text || answer.text;
+            
+            answerLabel.appendChild(labelText);
+            answerLabel.appendChild(answerText);
+            
+            // Add indicators if answer has been checked
+            if (hasCheckedAnswer) {
+                const indicators = document.createElement('div');
+                indicators.className = 'mt-2 flex flex-wrap gap-2';
+                indicators.style.marginTop = '0.5rem';
+                indicators.style.marginLeft = '1.5rem';
+                indicators.style.display = 'flex';
+                indicators.style.flexWrap = 'wrap';
+                indicators.style.gap = '0.5rem';
+                
+                if (isCorrect) {
+                    const correctBadge = document.createElement('span');
+                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
+                    correctBadge.style.backgroundColor = '#16a34a';
+                    correctBadge.style.color = 'white';
+                    correctBadge.style.borderRadius = '0.25rem';
+                    correctBadge.style.fontSize = '0.75rem';
+                    correctBadge.textContent = '✓ Correct Answer';
+                    indicators.appendChild(correctBadge);
+                }
+                
+                if (isSelected) {
+                    const yourAnswerBadge = document.createElement('span');
+                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
+                    yourAnswerBadge.style.backgroundColor = isCorrect ? '#2563eb' : '#dc2626';
+                    yourAnswerBadge.style.color = 'white';
+                    yourAnswerBadge.style.borderRadius = '0.25rem';
+                    yourAnswerBadge.style.fontSize = '0.75rem';
+                    yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
+                    indicators.appendChild(yourAnswerBadge);
+                }
+                
+                answerDiv.appendChild(answerLabel);
+                if (indicators.childNodes.length > 0) {
+                    answerDiv.appendChild(indicators);
+                }
+            } else {
+                answerDiv.appendChild(answerLabel);
+            }
+            
+            // Add click handler if answer hasn't been checked yet
+            if (!hasCheckedAnswer) {
+                answerDiv.addEventListener('click', function() {
+                    selectedAnswerId = answer.id;
+                    displayAnswerChoicesTaker(question);
+                    
+                    // Enable check button
+                    const checkBtn = document.querySelector('#check-answer-btn');
+                    if (checkBtn) {
+                        checkBtn.disabled = false;
+                    }
+                });
+            }
+            
+            answersContainer.appendChild(answerDiv);
+        });
+    }
+
+    /**
+     * Check the selected answer
+     */
+    function checkAnswer() {
+        if (!selectedAnswerId || !currentExamTakerData || hasCheckedAnswer) return;
+
+        const question = currentExamTakerData.questions[currentQuestionTakerIndex];
+        
+        // Mark as checked
+        hasCheckedAnswer = true;
+        
+        // Update the question with user's answer
+        question.user_answer_id = selectedAnswerId;
+        
+        // Save exam progress to API
+        saveExamProgress();
+        
+        // Update display to show result
+        displayAnswerChoicesTaker(question);
+        displayResultTaker(question);
+        
+        // Show explanation
+        const explanationSection = document.querySelector('#explanation-section-taker');
+        const explanationText = document.querySelector('#explanation-text-taker');
+        if (explanationSection && explanationText) {
+            explanationSection.classList.remove('hidden');
+            explanationText.textContent = question.explanation || 'No explanation available for this question.';
+        }
+        
+        // Hide check button after answer is checked
+        const checkBtn = document.querySelector('#check-answer-btn');
+        if (checkBtn) {
+            checkBtn.classList.add('hidden');
+        }
+        
+        // Show result indicator
+        const resultIndicator = document.querySelector('#result-indicator-taker');
+        if (resultIndicator) {
+            resultIndicator.classList.remove('hidden');
+        }
+        
+        // Check if all questions are answered and update submit button visibility
+        updateSubmitButtonVisibility();
+    }
+
+    /**
+     * Display result indicator in taker mode
+     */
+    function displayResultTaker(question) {
+        const resultIndicator = document.querySelector('#result-indicator-taker');
+        const resultIcon = document.querySelector('#result-icon-taker');
+        const resultText = document.querySelector('#result-text-taker');
+        const resultDetail = document.querySelector('#result-detail-taker');
+
+        if (!resultIndicator || !resultIcon || !resultText) return;
+
+        const answerChoices = question.answer_choices;
+        const isCorrect = answerChoices && answerChoices.some(a => a.is_correct && a.id === question.user_answer_id);
+        
+        resultIndicator.classList.remove('hidden');
+        
+        if (isCorrect) {
+            resultIndicator.style.backgroundColor = '#f0fdf4';
+            resultIndicator.style.borderLeft = '4px solid #22c55e';
+            resultIndicator.style.padding = '1rem';
+            resultIndicator.style.borderRadius = '0.5rem';
+            
+            resultIcon.textContent = '✓';
+            resultIcon.style.fontSize = '1.875rem';
+            resultIcon.style.marginRight = '0.75rem';
+            resultIcon.style.color = '#16a34a';
+            
+            resultText.textContent = 'Correct!';
+            resultText.style.fontSize = '1.25rem';
+            resultText.style.fontWeight = '700';
+            resultText.style.color = '#166534';
+            
+            if (resultDetail) {
+                resultDetail.textContent = 'Great job! You answered this question correctly.';
+                resultDetail.style.fontSize = '0.875rem';
+                resultDetail.style.marginTop = '0.25rem';
+                resultDetail.style.color = '#15803d';
+            }
+        } else {
+            resultIndicator.style.backgroundColor = '#fef2f2';
+            resultIndicator.style.borderLeft = '4px solid #ef4444';
+            resultIndicator.style.padding = '1rem';
+            resultIndicator.style.borderRadius = '0.5rem';
+            
+            resultIcon.textContent = '✗';
+            resultIcon.style.fontSize = '1.875rem';
+            resultIcon.style.marginRight = '0.75rem';
+            resultIcon.style.color = '#dc2626';
+            
+            resultText.textContent = 'Incorrect';
+            resultText.style.fontSize = '1.25rem';
+            resultText.style.fontWeight = '700';
+            resultText.style.color = '#991b1b';
+            
+            if (resultDetail) {
+                resultDetail.textContent = 'Review the explanation below to understand the correct answer.';
+                resultDetail.style.fontSize = '0.875rem';
+                resultDetail.style.marginTop = '0.25rem';
+                resultDetail.style.color = '#b91c1c';
+            }
+        }
+    }
+
+    /**
+     * Display question media in taker mode
+     */
+    function displayQuestionMediaTaker(question) {
+        const mediaContainer = document.querySelector('#question-media-taker');
+        
+        if (!mediaContainer) {
+            console.warn('Media container #question-media-taker not found');
+            return;
+        }
+
+        // Clear previous media
+        mediaContainer.innerHTML = '';
+
+        // Check if question has media_storage_path
+        if (!question.media_storage_path) {
+            mediaContainer.classList.add('hidden');
+            return;
+        }
+
+        // Show loading state
+        mediaContainer.classList.remove('hidden');
+        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-gray-500">Loading image...</span></div>';
+
+        // Construct the storage path
+        let storagePath = question.media_storage_path;
+
+        // Use Firebase Storage SDK for authenticated access
+        const storageRef = firebase.storage().ref(storagePath);
+        
+        // Get download URL with authentication
+        storageRef.getDownloadURL()
+            .then((url) => {
+                // Determine if this is a video or image
+                const isVideo = storagePath.toLowerCase().endsWith('.mp4') || url.toLowerCase().includes('.mp4');
+                
+                if (isVideo) {
+                    const video = document.createElement('video');
+                    video.src = url;
+                    video.controls = true;
+                    video.controlsList = 'nodownload';
+                    video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
+                    video.style.maxWidth = '100%';
+                    video.style.height = 'auto';
+                    video.style.borderRadius = '0.5rem';
+                    video.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                    video.style.marginBottom = '1rem';
+                    
+                    video.onerror = function() {
+                        console.error('Failed to load video from URL:', url);
+                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display video</span></div>';
+                    };
+                    
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(video);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = 'Question image';
+                    img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    img.style.borderRadius = '0.5rem';
+                    img.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                    img.style.marginBottom = '1rem';
+                    
+                    img.onerror = function() {
+                        console.error('Failed to load image from URL:', url);
+                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display image</span></div>';
+                    };
+                    
+                    mediaContainer.innerHTML = '';
+                    mediaContainer.appendChild(img);
+                }
+            })
+            .catch((error) => {
+                console.error('Error loading question media:', error);
+                console.error('Storage path attempted:', storagePath);
+                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load image: ' + error.message + '</span></div>';
+            });
+    }
+
+    /**
+     * Check if all questions in the exam have been answered
+     */
+    function allQuestionsAnswered() {
+        if (!currentExamTakerData || !currentExamTakerData.questions) return false;
+        return currentExamTakerData.questions.every(q => q.user_answer_id);
+    }
+
+    /**
+     * Update submit button visibility based on whether all questions are answered
+     */
+    function updateSubmitButtonVisibility() {
+        const submitBtn = document.querySelector('#submit-exam-btn');
+        if (!submitBtn) return;
+
+        if (allQuestionsAnswered()) {
+            submitBtn.classList.remove('hidden');
+        } else {
+            submitBtn.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Submit the completed exam
+     */
+    function submitExam() {
+        if (!currentExamTakerData || !allQuestionsAnswered()) {
+            alert('Please answer all questions before submitting.');
+            return;
+        }
+
+        const examId = currentExamTakerData.exam_id;
+        
+        // Prepare the exam data to send with is_complete set to true
+        const examData = {
+            questions: currentExamTakerData.questions
+                .filter(q => q.user_answer_id)
+                .map(q => ({
+                    question_id: q.id,
+                    answer_id: q.user_answer_id
+                })),
+            is_complete: true
+        };
+
+        // Disable submit button to prevent double submission
+        const submitBtn = document.querySelector('#submit-exam-btn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        }
+
+        fetch(`${API_BASE_URL}/api/v1/exams/${examId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(examData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Exam submitted successfully!');
+                // Close the exam taker and return to history
+                closeExamTaker();
+            })
+            .catch(error => {
+                console.error('Error submitting exam:', error);
+                alert('Failed to submit exam. Please try again.');
+                // Re-enable submit button
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Exam';
+                }
+            });
+    }
+
+    /**
+     * Save exam progress to API
+     */
+    function saveExamProgress() {
+        if (!currentExamTakerData) return;
+
+        const examId = currentExamTakerData.exam_id;
+        
+        // Prepare the exam data to send
+        const examData = {
+            questions: currentExamTakerData.questions
+                .filter(q => q.user_answer_id)
+                .map(q => ({
+                    question_id: q.id,
+                    answer_id: q.user_answer_id
+                })),
+            is_complete: false
+        };
+
+        fetch(`${API_BASE_URL}/api/v1/exams/${examId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(examData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Update local data with response
+                if (data.questions) {
+                    currentExamTakerData.questions = data.questions;
+                }
+            })
+            .catch(error => {
+                console.error('Error saving exam progress:', error);
+                // Show error message to user
+                alert('Failed to save exam progress. Please try again.');
             });
     }
 
