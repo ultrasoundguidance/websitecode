@@ -7,7 +7,17 @@ Designed by [a human online](https://ahuman.online), made for [Ultrasound Guidan
     - Setup [Stripe webhook](https://ghost.org/docs/webhooks/#stripe-webhooks) if testing purchases
 2. To use a custom theme, set it up following these [instructions](https://ghost.org/tutorials/download-and-upload-a-theme/). Once you've set it up, start your development server in the custom theme with `npm run dev`.
 3. Setup Stripe webhooks to work with Stripe locally by following these [instructions](https://ghost.org/docs/webhooks/#stripe-webhooks). Make sure your Local listener webhook in your Stripe account has a status of Listening.
-4. When you're ready to deploy your custom theme, run `npm run zip`. This will compress your theme files into a zip file that's ready to upload to Ghost.
+4. To send emails locally use [MailDrv](https://maildev.github.io/maildev/). First start the server with docker, `docker run -p 1080:1080 -p 1025:1025 soulteary/maildev` then access mail on http://localhost:1080/
+   - Ensure the config.development.json file has
+   ```
+   "mail": {
+    "transport": "SMTP",
+    "options": {
+      "port": 1025
+    }
+  }
+  ```
+5. When you're ready to deploy your custom theme, run `npm run zip`. This will compress your theme files into a zip file that's ready to upload to Ghost.
 
 Note: 
 - When editing .js files run `npx gulp` for automatic rebuilding. To rebuild the bundle run `npx gulp build`.
