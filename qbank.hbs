@@ -9,37 +9,43 @@
         </h1>
 
         <!-- Exam History Section -->
-        <div id="exam-history-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm">
+        <div id="exam-history-section"
+            class="mb-8 p-6 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
             <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Exam History</h2>
+                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">Exam History</h2>
                 <div class="flex gap-2">
                     <button id="start-new-exam"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                         Start New Exam
                     </button>
                     <button id="delete-all-exams"
-                        class="hidden px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        class="hidden px-4 py-2 bg-tertiary-600 hover:bg-tertiary-700 text-white text-sm font-semibold rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-tertiary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                         Delete All
                     </button>
                 </div>
             </div>
             <div id="exam-history" data-member-id="{{@member.uuid}}">
                 <div id="exam-loading" class="flex items-center justify-center py-8">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    <span class="ml-3 text-gray-600">Loading exam history...</span>
+                    <div
+                        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400">
+                    </div>
+                    <span class="ml-3 text-gray-600 dark:text-gray-300">Loading exam history...</span>
                 </div>
                 <ul id="exam-list">
                 </ul>
-                <div class="text-gray-500 py-4 hidden" id="no-exams-message">No exam history found</div>
-                <div class="text-red-500 py-4 hidden" id="error-message">Error loading exam history</div>
+                <div class="text-gray-500 dark:text-gray-400 py-4 hidden" id="no-exams-message">No exam history found
+                </div>
+                <div class="text-tertiary-600 dark:text-tertiary-400 py-4 hidden" id="error-message">Error loading exam
+                    history</div>
             </div>
         </div>
 
         <!-- Exam Taking Section -->
-        <div id="exam-taker-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm hidden">
+        <div id="exam-taker-section"
+            class="mb-8 p-6 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm hidden">
             <div class="mb-6">
                 <button id="back-to-history-taker"
-                    class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                    class="flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -48,38 +54,40 @@
                 </button>
             </div>
 
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Take Exam</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Take Exam</h2>
 
             <!-- Question Navigation -->
             <div class="flex items-center justify-between mb-6">
                 <button id="prev-question-taker"
-                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     &larr; Previous
                 </button>
                 <div class="text-center">
-                    <span class="text-lg font-semibold text-gray-700">
+                    <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">
                         Question <span id="current-question-num-taker">1</span> of <span
                             id="total-questions-taker">0</span>
                     </span>
                 </div>
                 <button id="next-question-taker"
-                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     Next &rarr;
                 </button>
             </div>
 
             <!-- Loading State -->
             <div id="taker-loading" class="flex items-center justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                <span class="ml-3 text-gray-600">Loading exam...</span>
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400">
+                </div>
+                <span class="ml-3 text-gray-600 dark:text-gray-300">Loading exam...</span>
             </div>
 
             <!-- Question Display -->
             <div id="question-display-taker" class="hidden">
                 <!-- Question Text -->
-                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Question:</h3>
-                    <p id="question-text-taker" class="text-lg text-gray-700"></p>
+                <div
+                    class="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Question:</h3>
+                    <p id="question-text-taker" class="text-lg text-gray-700 dark:text-gray-300"></p>
                 </div>
 
                 <!-- Image/Video -->
@@ -87,7 +95,7 @@
 
                 <!-- Answer Choices -->
                 <div class="mb-6">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Select Your Answer:</h4>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">Select Your Answer:</h4>
                     <div id="answer-choices-taker" class="space-y-3">
                         <!-- Answer choices will be dynamically inserted here -->
                     </div>
@@ -96,7 +104,7 @@
                 <!-- Check Answer Button -->
                 <div class="mb-6 flex justify-center">
                     <button id="check-answer-btn"
-                        class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled>
                         Check Answer
                     </button>
@@ -114,15 +122,16 @@
                 </div>
 
                 <!-- Explanation -->
-                <div id="explanation-section-taker" class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500 hidden">
-                    <h4 class="text-lg font-semibold text-blue-900 mb-2">Explanation:</h4>
-                    <p id="explanation-text-taker" class="text-gray-700"></p>
+                <div id="explanation-section-taker"
+                    class="p-4 bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 rounded-lg border-l-4 border-accent-600 dark:border-accent-400 hidden">
+                    <h4 class="text-lg font-semibold text-accent-900 dark:text-accent-300 mb-2">Explanation:</h4>
+                    <p id="explanation-text-taker" class="text-gray-700 dark:text-gray-300"></p>
                 </div>
 
                 <!-- Submit Exam Button -->
                 <div class="mt-8 flex justify-center">
                     <button id="submit-exam-btn"
-                        class="hidden px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="hidden px-8 py-3 bg-accent-600 hover:bg-accent-700 text-white font-bold text-lg rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
                         Submit Exam
                     </button>
                 </div>
@@ -130,25 +139,31 @@
 
             <!-- Error State -->
             <div id="taker-error" class="hidden text-center py-12">
-                <p class="text-red-500 text-lg">Failed to load exam data. Please try again.</p>
+                <p class="text-tertiary-600 dark:text-tertiary-400 text-lg">Failed to load exam data. Please try again.
+                </p>
             </div>
         </div>
 
         <!-- Score Report Section -->
-        <div id="score-report-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm hidden">
+        <div id="score-report-section"
+            class="mb-8 p-6 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm hidden">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">Exam Complete!</h2>
-                <div class="inline-block p-8 bg-blue-50 rounded-lg border-2 border-blue-500">
-                    <div class="text-6xl font-bold text-blue-600 mb-2" id="final-score-percentage">0%</div>
-                    <div class="text-xl text-gray-700 mb-4" id="final-score-text">0 / 0 Correct</div>
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">Exam Complete!</h2>
+                <div
+                    class="inline-block p-8 bg-primary-100 dark:bg-primary-900 dark:bg-opacity-20 rounded-lg border-2 border-primary-500 dark:border-primary-600">
+                    <div class="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-2"
+                        id="final-score-percentage">0%</div>
+                    <div class="text-xl text-gray-700 dark:text-gray-300 mb-4" id="final-score-text">0 / 0 Correct</div>
                     <div class="flex justify-center gap-8 mt-4">
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-green-600" id="correct-count">0</div>
-                            <div class="text-sm text-gray-600">Correct</div>
+                            <div class="text-3xl font-bold text-accent-600 dark:text-accent-400" id="correct-count">0
+                            </div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Correct</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-3xl font-bold text-red-600" id="incorrect-count">0</div>
-                            <div class="text-sm text-gray-600">Incorrect</div>
+                            <div class="text-3xl font-bold text-tertiary-600 dark:text-tertiary-400"
+                                id="incorrect-count">0</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">Incorrect</div>
                         </div>
                     </div>
                 </div>
@@ -162,25 +177,26 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button id="review-exam-btn"
-                    class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     Review Exam
                 </button>
                 <button id="back-to-history-score"
-                    class="px-8 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                    class="px-8 py-3 bg-gray-600 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-600 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     Exam History
                 </button>
                 <button id="create-new-exam-score"
-                    class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    class="px-8 py-3 bg-accent-600 hover:bg-accent-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     Create New Exam
                 </button>
             </div>
         </div>
 
         <!-- Exam Viewer Section -->
-        <div id="exam-viewer-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm hidden">
+        <div id="exam-viewer-section"
+            class="mb-8 p-6 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm hidden">
             <div class="mb-6">
                 <button id="back-to-history"
-                    class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                    class="flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -189,37 +205,39 @@
                 </button>
             </div>
 
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Exam Review</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Exam Review</h2>
 
             <!-- Question Navigation -->
             <div class="flex items-center justify-between mb-6">
                 <button id="prev-question"
-                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     &larr; Previous
                 </button>
                 <div class="text-center">
-                    <span class="text-lg font-semibold text-gray-700">
+                    <span class="text-lg font-semibold text-gray-700 dark:text-gray-200">
                         Question <span id="current-question-num">1</span> of <span id="total-questions">0</span>
                     </span>
                 </div>
                 <button id="next-question"
-                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold rounded transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                     Next &rarr;
                 </button>
             </div>
 
             <!-- Loading State -->
             <div id="viewer-loading" class="flex items-center justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                <span class="ml-3 text-gray-600">Loading exam...</span>
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400">
+                </div>
+                <span class="ml-3 text-gray-600 dark:text-gray-300">Loading exam...</span>
             </div>
 
             <!-- Question Display -->
             <div id="question-display" class="hidden">
                 <!-- Question Text -->
-                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Question:</h3>
-                    <p id="question-text" class="text-lg text-gray-700"></p>
+                <div
+                    class="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Question:</h3>
+                    <p id="question-text" class="text-lg text-gray-700 dark:text-gray-300"></p>
                 </div>
 
                 <!-- Image/Video -->
@@ -227,7 +245,7 @@
 
                 <!-- Answer Choices -->
                 <div class="mb-6">
-                    <h4 class="text-lg font-semibold text-gray-800 mb-3">Answer Choices:</h4>
+                    <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">Answer Choices:</h4>
                     <div id="answer-choices" class="space-y-3">
                         <!-- Answer choices will be dynamically inserted here -->
                     </div>
@@ -239,33 +257,35 @@
                         <span id="result-icon" class="text-3xl mr-3"></span>
                         <div>
                             <span id="result-text" class="text-xl font-bold"></span>
-                            <p id="result-detail" class="text-sm mt-1"></p>
+                            <p id="result-detail" class="text-sm mt-1 dark:text-gray-300"></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Explanation -->
-                <div id="explanation-section" class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                    <h4 class="text-lg font-semibold text-blue-900 mb-2">Explanation:</h4>
-                    <p id="explanation-text" class="text-gray-700"></p>
+                <div id="explanation-section"
+                    class="p-4 bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 rounded-lg border-l-4 border-accent-600 dark:border-accent-400">
+                    <h4 class="text-lg font-semibold text-accent-900 dark:text-accent-300 mb-2">Explanation:</h4>
+                    <p id="explanation-text" class="text-gray-700 dark:text-gray-300"></p>
                 </div>
             </div>
 
             <!-- Error State -->
             <div id="viewer-error" class="hidden text-center py-12">
-                <p class="text-red-500 text-lg">Failed to load exam data. Please try again.</p>
+                <p class="text-tertiary-600 dark:text-tertiary-400 text-lg">Failed to load exam data. Please try again.
+                </p>
             </div>
         </div>
 
         <!-- New Exam Modal -->
         <div id="new-exam-modal"
             class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
-            <div class="bg-white rounded-lg shadow-xl max-w-prose w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-prose w-full max-h-[90vh] overflow-y-auto">
                 <div
-                    class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-                    <h2 class="text-2xl font-bold text-gray-800">Create New Exam</h2>
+                    class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between z-10">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Create New Exam</h2>
                     <button id="close-new-exam"
-                        class="text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+                        class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl font-bold">&times;</button>
                 </div>
 
                 <div class="p-6">
@@ -273,11 +293,12 @@
 
                         <!-- Number of Questions -->
                         <div>
-                            <label for="question-count" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label for="question-count"
+                                class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Number of Questions
                             </label>
                             <select id="question-count" name="questionCount"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
                                 <option value="5">5 Questions</option>
                                 <option value="10">10 Questions</option>
                                 <option value="15">15 Questions</option>
@@ -293,41 +314,43 @@
 
                         <!-- Question Categories -->
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Question Categories
                             </label>
                             <div id="categories-container" class="space-y-2">
                                 <!-- Categories will be dynamically loaded here -->
-                                <div class="text-gray-500 text-sm">Loading categories...</div>
+                                <div class="text-gray-500 dark:text-gray-400 text-sm">Loading categories...</div>
                             </div>
                         </div>
 
                         <!-- Question Selection Type -->
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Question Selection
                             </label>
                             <div class="space-y-2">
                                 <div class="flex items-center">
                                     <input type="checkbox" id="selection-unanswered" name="questionSelection"
                                         value="unanswered" checked
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <label for="selection-unanswered" class="ml-2 text-sm text-gray-700">
+                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                                    <label for="selection-unanswered"
+                                        class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                                         Unanswered Questions
                                     </label>
                                 </div>
                                 <div class="flex items-center">
                                     <input type="checkbox" id="selection-missed" name="questionSelection" value="missed"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <label for="selection-missed" class="ml-2 text-sm text-gray-700">
+                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                                    <label for="selection-missed" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                                         Missed Questions
                                     </label>
                                 </div>
                                 <div class="flex items-center">
                                     <input type="checkbox" id="selection-correct" name="questionSelection"
                                         value="correct"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <label for="selection-correct" class="ml-2 text-sm text-gray-700">
+                                        class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded">
+                                    <label for="selection-correct"
+                                        class="ml-2 text-sm text-gray-700 dark:text-gray-300">
                                         Correct Questions
                                     </label>
                                 </div>
@@ -337,7 +360,7 @@
                         <!-- Submit Button -->
                         <div class="pt-4">
                             <button type="submit"
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                                 Create Exam
                             </button>
                         </div>
@@ -359,13 +382,13 @@
                                 <span
                                     class="text-base font-semibold tracking-wide text-gray-700 dark:text-gray-300 exam-date"></span>
                                 <span
-                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-green-200 text-green-800 exam-status-complete hidden">Complete</span>
+                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-accent-200 dark:bg-accent-700 text-accent-900 dark:text-accent-100 exam-status-complete hidden">Complete</span>
                                 <span
-                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-yellow-200 text-yellow-800 exam-status-progress hidden">In
+                                    class="inline-block px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded bg-tertiary-200 dark:bg-tertiary-700 text-tertiary-900 dark:text-tertiary-100 exam-status-progress hidden">In
                                     Progress</span>
                             </div>
                             <p class="text-lg font-bold leading-5 mb-2">
-                                <span class="text-2xl font-bold exam-question-count"></span>
+                                <span class="text-2xl font-bold dark:text-gray-100 exam-question-count"></span>
                             </p>
                             <div class="exam-tags-container mt-1 hidden">
                                 <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -378,21 +401,21 @@
                                 </p>
                             </div>
                             <div class="exam-score-display mt-2 hidden">
-                                <span class="text-lg font-semibold text-blue-600">Score: <span
+                                <span class="text-lg font-semibold text-primary-600 dark:text-primary-400">Score: <span
                                         class="exam-score"></span></span>
                             </div>
                         </div>
                         <div class="mt-3 flex justify-end gap-2">
                             <button
-                                class="resume-exam-btn px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-1 hidden">
+                                class="resume-exam-btn px-3 py-1 bg-accent-600 hover:bg-accent-700 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-accent-400 focus:ring-offset-1 dark:focus:ring-offset-gray-800 hidden">
                                 Resume
                             </button>
                             <button
-                                class="view-exam-btn px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1 hidden">
+                                class="view-exam-btn px-3 py-1 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 dark:focus:ring-offset-gray-800 hidden">
                                 View
                             </button>
                             <button
-                                class="delete-exam-btn px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1">
+                                class="delete-exam-btn px-3 py-1 bg-tertiary-600 hover:bg-tertiary-700 text-white text-xs font-semibold rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-tertiary-400 focus:ring-offset-1 dark:focus:ring-offset-gray-800">
                                 Delete
                             </button>
                         </div>

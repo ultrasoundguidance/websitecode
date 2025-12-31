@@ -63,7 +63,7 @@ window.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 if (!data || data.length === 0) {
-                    categoriesContainer.innerHTML = '<div class="text-red-500 text-sm">No categories available</div>';
+                    categoriesContainer.innerHTML = '<div class="text-tertiary-600 dark:text-tertiary-400 text-sm">No categories available</div>';
                     return;
                 }
 
@@ -84,11 +84,11 @@ window.addEventListener('DOMContentLoaded', function () {
                     checkbox.value = tag.slug || tag.name;
                     checkbox.setAttribute('data-tag-name', tag.name);
                     checkbox.setAttribute('data-tag-id', tag.id || index);
-                    checkbox.className = 'exam-category h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded';
+                    checkbox.className = 'exam-category h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded';
 
                     const label = document.createElement('label');
                     label.htmlFor = checkboxId;
-                    label.className = 'ml-2 text-sm text-gray-700 cursor-pointer';
+                    label.className = 'ml-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer';
                     label.textContent = tag.name;
 
                     // Ensure clicking anywhere in the wrapper toggles the checkbox
@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading categories:', error);
-                categoriesContainer.innerHTML = '<div class="text-red-500 text-sm">Failed to load categories</div>';
+                categoriesContainer.innerHTML = '<div class="text-tertiary-600 dark:text-tertiary-400 text-sm">Failed to load categories</div>';
             });
     }
 

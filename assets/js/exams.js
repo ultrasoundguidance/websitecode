@@ -451,27 +451,27 @@ window.addEventListener('DOMContentLoaded', function () {
                 // Show all answers, but highlight the correct answer and user's selection
                 if (isCorrect && isUserAnswer) {
                     // User selected the correct answer - green with emphasis
-                    answerDiv.classList.add('border-green-600', 'bg-green-100', 'shadow-md');
+                    answerDiv.classList.add('border-accent-600', 'dark:border-accent-500', 'bg-accent-100', 'dark:bg-accent-900', 'dark:bg-opacity-20', 'shadow-md');
                 } else if (isCorrect) {
                     // Correct answer (but user didn't select it) - green border
-                    answerDiv.classList.add('border-green-500', 'bg-green-50');
+                    answerDiv.classList.add('border-accent-500', 'dark:border-accent-600', 'bg-accent-50', 'dark:bg-accent-900', 'dark:bg-opacity-10');
                 } else if (isUserAnswer) {
                     // User selected this wrong answer - red with emphasis
-                    answerDiv.classList.add('border-red-600', 'bg-red-100', 'shadow-md');
+                    answerDiv.classList.add('border-tertiary-600', 'dark:border-tertiary-500', 'bg-tertiary-100', 'dark:bg-tertiary-900', 'dark:bg-opacity-20', 'shadow-md');
                 } else {
                     // Other answer choices - neutral
-                    answerDiv.classList.add('border-gray-300', 'bg-gray-50');
+                    answerDiv.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-gray-50', 'dark:bg-gray-900');
                 }
                 
                 const answerLabel = document.createElement('div');
                 answerLabel.className = 'flex items-start';
                 
                 const labelText = document.createElement('span');
-                labelText.className = 'font-semibold mr-2 min-w-[1.5rem]';
+                labelText.className = 'font-semibold mr-2 min-w-[1.5rem] text-gray-800 dark:text-gray-200';
                 labelText.textContent = String.fromCharCode(65 + index) + '.';
                 
                 const answerText = document.createElement('span');
-                answerText.className = 'flex-1';
+                answerText.className = 'flex-1 text-gray-700 dark:text-gray-300';
                 answerText.textContent = answer.answer_text || answer.text;
                 
                 answerLabel.appendChild(labelText);
@@ -483,14 +483,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
-                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white';
+                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-accent-600 dark:bg-accent-700 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
                 
                 if (isUserAnswer) {
                     const yourAnswerBadge = document.createElement('span');
-                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-blue-600' : 'bg-red-600');
+                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-primary-600 dark:bg-primary-700' : 'bg-tertiary-600 dark:bg-tertiary-700');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
@@ -756,12 +756,20 @@ window.addEventListener('DOMContentLoaded', function () {
         // Update check button state
         const checkBtn = document.querySelector('#check-answer-btn');
         if (checkBtn) {
+            // Clear any inline styles from previous questions
+            checkBtn.style.display = '';
+            
             if (hasCheckedAnswer) {
+                // Keep button hidden once answer is checked
                 checkBtn.classList.add('hidden');
-            } else {
+            } else if (selectedAnswerId) {
+                // Show button only when an answer is selected
                 checkBtn.classList.remove('hidden');
                 checkBtn.textContent = 'Check Answer';
-                checkBtn.disabled = !selectedAnswerId;
+                checkBtn.disabled = false;
+            } else {
+                // Hide button when no answer is selected
+                checkBtn.classList.add('hidden');
             }
         }
 
@@ -778,6 +786,34 @@ window.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             if (explanationSection) explanationSection.classList.add('hidden');
+        }
+
+        // Show/hide result indicator based on whether answer was checked
+        const resultIndicator = document.querySelector('#result-indicator-taker');
+        const resultIcon = document.querySelector('#result-icon-taker');
+        const resultText = document.querySelector('#result-text-taker');
+        
+        if (hasCheckedAnswer && resultIndicator && resultIcon && resultText) {
+            // Show result indicator with appropriate styling
+            const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
+            
+            resultIndicator.classList.remove('hidden');
+            if (isCorrect) {
+                resultIndicator.className = 'mb-6 p-4 rounded-lg bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 border border-accent-600 dark:border-accent-500';
+                resultIcon.textContent = '✓';
+                resultIcon.className = 'text-3xl mr-3 text-accent-600 dark:text-accent-400';
+                resultText.textContent = 'Correct!';
+                resultText.className = 'text-xl font-bold text-accent-900 dark:text-accent-300';
+            } else {
+                resultIndicator.className = 'mb-6 p-4 rounded-lg bg-tertiary-100 dark:bg-tertiary-900 dark:bg-opacity-20 border border-tertiary-600 dark:border-tertiary-500';
+                resultIcon.textContent = '✗';
+                resultIcon.className = 'text-3xl mr-3 text-tertiary-600 dark:text-tertiary-400';
+                resultText.textContent = 'Incorrect';
+                resultText.className = 'text-xl font-bold text-tertiary-900 dark:text-tertiary-300';
+            }
+        } else if (resultIndicator) {
+            // Hide result indicator if question hasn't been checked
+            resultIndicator.classList.add('hidden');
         }
 
         // Check if all questions are answered and show/hide submit button
@@ -809,20 +845,20 @@ window.addEventListener('DOMContentLoaded', function () {
             if (hasCheckedAnswer) {
                 // Show correct/incorrect after checking
                 if (isCorrect && isSelected) {
-                    answerDiv.classList.add('border-green-600', 'bg-green-100');
+                    answerDiv.classList.add('border-accent-600', 'dark:border-accent-500', 'bg-accent-100', 'dark:bg-accent-900', 'dark:bg-opacity-20');
                 } else if (isCorrect) {
-                    answerDiv.classList.add('border-green-500', 'bg-green-50');
+                    answerDiv.classList.add('border-accent-500', 'dark:border-accent-600', 'bg-accent-50', 'dark:bg-accent-900', 'dark:bg-opacity-10');
                 } else if (isSelected) {
-                    answerDiv.classList.add('border-red-600', 'bg-red-100');
+                    answerDiv.classList.add('border-tertiary-600', 'dark:border-tertiary-500', 'bg-tertiary-100', 'dark:bg-tertiary-900', 'dark:bg-opacity-20');
                 } else {
-                    answerDiv.classList.add('border-gray-300', 'bg-gray-50');
+                    answerDiv.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-gray-50', 'dark:bg-gray-900');
                 }
             } else {
                 // Show selected state before checking
                 if (isSelected) {
-                    answerDiv.classList.add('border-blue-600', 'bg-blue-100');
+                    answerDiv.classList.add('border-primary-600', 'dark:border-primary-500', 'bg-primary-100', 'dark:bg-primary-900', 'dark:bg-opacity-20');
                 } else {
-                    answerDiv.classList.add('border-gray-300', 'bg-white');
+                    answerDiv.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-900', 'hover:border-primary-400', 'dark:hover:border-primary-600', 'hover:bg-gray-50', 'dark:hover:bg-gray-800');
                 }
             }
             
@@ -830,11 +866,11 @@ window.addEventListener('DOMContentLoaded', function () {
             answerLabel.className = 'flex items-start';
             
             const labelText = document.createElement('span');
-            labelText.className = 'font-semibold mr-2 min-w-[1.5rem]';
+            labelText.className = 'font-semibold mr-2 min-w-[1.5rem] text-gray-800 dark:text-gray-200';
             labelText.textContent = String.fromCharCode(65 + index) + '.';
             
             const answerText = document.createElement('span');
-            answerText.className = 'flex-1';
+            answerText.className = 'flex-1 text-gray-700 dark:text-gray-300';
             answerText.textContent = answer.answer_text || answer.text;
             
             answerLabel.appendChild(labelText);
@@ -847,14 +883,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
-                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white';
+                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-accent-600 dark:bg-accent-700 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
                 
                 if (isSelected) {
                     const yourAnswerBadge = document.createElement('span');
-                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-blue-600' : 'bg-red-600');
+                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-primary-600 dark:bg-primary-700' : 'bg-tertiary-600 dark:bg-tertiary-700');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
@@ -872,17 +908,22 @@ window.addEventListener('DOMContentLoaded', function () {
                 answerDiv.addEventListener('click', function() {
                     selectedAnswerId = answer.id;
                     displayAnswerChoicesTaker(question);
-                    
-                    // Enable check button
-                    const checkBtn = document.querySelector('#check-answer-btn');
-                    if (checkBtn) {
-                        checkBtn.disabled = false;
-                    }
                 });
             }
             
             answersContainer.appendChild(answerDiv);
         });
+        
+        // Update check button visibility after rendering all answers
+        const checkBtn = document.querySelector('#check-answer-btn');
+        if (checkBtn && !hasCheckedAnswer) {
+            if (selectedAnswerId) {
+                checkBtn.classList.remove('hidden');
+                checkBtn.disabled = false;
+            } else {
+                checkBtn.classList.add('hidden');
+            }
+        }
     }
 
     /**
@@ -899,12 +940,18 @@ window.addEventListener('DOMContentLoaded', function () {
         // Update the question with user's answer
         question.user_answer_id = selectedAnswerId;
         
+        // Permanently hide check button immediately
+        const checkBtn = document.querySelector('#check-answer-btn');
+        if (checkBtn) {
+            checkBtn.classList.add('hidden');
+            checkBtn.style.display = 'none'; // Force hide with inline style
+        }
+        
         // Save exam progress to API
         saveExamProgress();
         
         // Update display to show result
         displayAnswerChoicesTaker(question);
-        displayResultTaker(question);
         
         // Show explanation
         const explanationSection = document.querySelector('#explanation-section-taker');
@@ -914,13 +961,31 @@ window.addEventListener('DOMContentLoaded', function () {
             explanationText.textContent = question.explanation || 'No explanation available for this question.';
         }
         
-        // Hide check button after answer is checked
-        const checkBtn = document.querySelector('#check-answer-btn');
-        if (checkBtn) {
-            checkBtn.classList.add('hidden');
+        // Display result indicator
+        const resultIndicator = document.querySelector('#result-indicator-taker');
+        const resultIcon = document.querySelector('#result-icon-taker');
+        const resultText = document.querySelector('#result-text-taker');
+        
+        if (resultIndicator && resultIcon && resultText) {
+            const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
+            
+            resultIndicator.classList.remove('hidden');
+            if (isCorrect) {
+                resultIndicator.className = 'mb-6 p-4 rounded-lg bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 border border-accent-600 dark:border-accent-500';
+                resultIcon.textContent = '✓';
+                resultIcon.className = 'text-3xl mr-3 text-accent-600 dark:text-accent-400';
+                resultText.textContent = 'Correct!';
+                resultText.className = 'text-xl font-bold text-accent-900 dark:text-accent-300';
+            } else {
+                resultIndicator.className = 'mb-6 p-4 rounded-lg bg-tertiary-100 dark:bg-tertiary-900 dark:bg-opacity-20 border border-tertiary-600 dark:border-tertiary-500';
+                resultIcon.textContent = '✗';
+                resultIcon.className = 'text-3xl mr-3 text-tertiary-600 dark:text-tertiary-400';
+                resultText.textContent = 'Incorrect';
+                resultText.className = 'text-xl font-bold text-tertiary-900 dark:text-tertiary-300';
+            }
         }
         
-        // Check if all questions are answered and update submit button visibility
+        // Update submit button visibility - show if this was the last question answered
         updateSubmitButtonVisibility();
     }
 
