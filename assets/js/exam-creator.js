@@ -20,21 +20,21 @@ window.addEventListener('DOMContentLoaded', function () {
     if (startNewExamBtn && modal) {
         startNewExamBtn.addEventListener('click', function () {
             modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.classList.add('overflow-hidden'); // Prevent background scrolling
         });
     }
 
     if (closeModalBtn && modal) {
         closeModalBtn.addEventListener('click', function () {
             modal.classList.add('hidden');
-            document.body.style.overflow = ''; // Restore scrolling
+            document.body.classList.remove('overflow-hidden'); // Restore scrolling
         });
 
         // Close modal when clicking outside of it
         modal.addEventListener('click', function (e) {
             if (e.target === modal) {
                 modal.classList.add('hidden');
-                document.body.style.overflow = '';
+                document.body.classList.remove('overflow-hidden');
             }
         });
 
@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
                 modal.classList.add('hidden');
-                document.body.style.overflow = '';
+                document.body.classList.remove('overflow-hidden');
             }
         });
     }
@@ -129,7 +129,8 @@ window.addEventListener('DOMContentLoaded', function () {
                 name: checkbox.getAttribute('data-tag-name'),
                 id: checkbox.getAttribute('data-tag-id')
             }));
-        const questionSelection = document.querySelector('input[name="questionSelection"]:checked').value;
+        const questionSelections = Array.from(document.querySelectorAll('input[name="questionSelection"]:checked'))
+            .map(checkbox => checkbox.value);
 
         // Prepare exam data
         const examData = {
@@ -138,9 +139,9 @@ window.addEventListener('DOMContentLoaded', function () {
             tags: categories
         };
 
-        // Only include filters if not "all"
-        if (questionSelection !== 'all') {
-            examData.filters = [questionSelection];
+        // Include filters if any are selected
+        if (questionSelections.length > 0) {
+            examData.filters = questionSelections;
         }
 
         // Show loading state
@@ -167,7 +168,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 // Close modal immediately
                 if (modal) {
                     modal.classList.add('hidden');
-                    document.body.style.overflow = '';
+                    document.body.classList.remove('overflow-hidden');
                 }
 
                 // Open the exam taker for the newly created exam
@@ -194,8 +195,8 @@ window.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => {
-                console.error('Error creating exam:', error);
-                showMessage('error', 'Failed to create exam. Please try again.');
+                console.error('Error creating exam:', error);                
+                showMessage('error', 'No questions available. Select different criteria to create an exam');
             })
             .finally(() => {
                 form.querySelector('button[type="submit"]').disabled = false;
@@ -230,6 +231,13 @@ window.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 formMessage.classList.add('hidden');
             }, 3000);
+        }
+
+        // Auto-hide error messages after 5 seconds
+        if (type === 'error') {
+            setTimeout(() => {
+                formMessage.classList.add('hidden');
+            }, 5000);
         }
     }
 });

@@ -21,6 +21,7 @@ window.addEventListener('DOMContentLoaded', function () {
     let currentQuestionTakerIndex = 0;
     let selectedAnswerId = null;
     let hasCheckedAnswer = false;
+    let isSubmitting = false;
 
     // Load exam history
     loadExamHistory();
@@ -94,6 +95,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     });
 
                     const tags = exam.tags ? exam.tags.map(value => value.name).join(", ") : '';
+                    const filters = exam.filters || '';
                     const questionCount = exam.question_count || exam.questions?.length || 0;
                     const isComplete = exam.completed_at || false;
 
@@ -103,13 +105,38 @@ window.addEventListener('DOMContentLoaded', function () {
                     // Populate the data
                     clone.querySelector('.exam-date').textContent = date;
                     clone.querySelector('.exam-question-count').textContent = questionCount === 1 ? `${questionCount} Question` : `${questionCount} Questions`;
-                    clone.querySelector('.exam-tags').textContent = tags;
+                    
+                    // Display tags/categories if available
+                    const tagsElement = clone.querySelector('.exam-tags');
+                    const tagsContainer = clone.querySelector('.exam-tags-container');
+                    if (tags && tagsElement && tagsContainer) {
+                        tagsElement.textContent = tags;
+                        tagsContainer.classList.remove('hidden');
+                    }
+                    
+                    // Display filters if available
+                    const filtersElement = clone.querySelector('.exam-filters');
+                    const filtersContainer = clone.querySelector('.exam-filters-container');
+                    if (filters && filtersElement && filtersContainer) {
+                        filtersElement.textContent = filters;
+                        filtersContainer.classList.remove('hidden');
+                    }
 
                     // Set status badge
                     const statusComplete = clone.querySelector('.exam-status-complete');
                     const statusProgress = clone.querySelector('.exam-status-progress');
                     if (isComplete) {
                         statusComplete.classList.remove('hidden');
+                        
+                        // Display score for completed exams
+                        if (exam.score !== undefined && exam.score !== null) {
+                            const scoreDisplay = clone.querySelector('.exam-score-display');
+                            const scoreElement = clone.querySelector('.exam-score');
+                            if (scoreDisplay && scoreElement) {
+                                scoreElement.textContent = exam.score;
+                                scoreDisplay.classList.remove('hidden');
+                            }
+                        }
                     } else {
                         statusProgress.classList.remove('hidden');
                     }
@@ -185,15 +212,13 @@ window.addEventListener('DOMContentLoaded', function () {
         if (!confirm('Are you sure you want to delete ALL exams? This action cannot be undone.')) {
             return;
         }
-
-        fetch(`${API_BASE_URL}/api/v1/exams/${memberId}/all`, {
+        fetch(`${API_BASE_URL}/api/v1/exams/user/${memberId}/all`, {
             method: 'DELETE'
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                console.log('All exams deleted successfully');
                 loadExamHistory();
             })
             .catch(error => {
@@ -246,7 +271,45 @@ window.addEventListener('DOMContentLoaded', function () {
 
         const submitExamBtn = document.querySelector('#submit-exam-btn');
         if (submitExamBtn) {
+            // Remove existing listener if any, then add new one
+            submitExamBtn.removeEventListener('click', submitExam);
             submitExamBtn.addEventListener('click', submitExam);
+        }
+
+        // Set up score report controls
+        const reviewExamBtn = document.querySelector('#review-exam-btn');
+        const backToHistoryScore = document.querySelector('#back-to-history-score');
+        const createNewExamScore = document.querySelector('#create-new-exam-score');
+
+        if (reviewExamBtn) {
+            reviewExamBtn.addEventListener('click', () => {
+                const scoreSection = document.querySelector('#score-report-section');
+                if (scoreSection) scoreSection.classList.add('hidden');
+                if (currentExamTakerData && currentExamTakerData.exam_id) {
+                    openExamViewer(currentExamTakerData.exam_id);
+                }
+            });
+        }
+
+        if (backToHistoryScore) {
+            backToHistoryScore.addEventListener('click', () => {
+                const scoreSection = document.querySelector('#score-report-section');
+                const historySection = document.querySelector('#exam-history-section');
+                if (scoreSection) scoreSection.classList.add('hidden');
+                if (historySection) historySection.classList.remove('hidden');
+                loadExamHistory();
+            });
+        }
+
+        if (createNewExamScore) {
+            createNewExamScore.addEventListener('click', () => {
+                const scoreSection = document.querySelector('#score-report-section');
+                const historySection = document.querySelector('#exam-history-section');
+                const newExamModal = document.querySelector('#new-exam-modal');
+                if (scoreSection) scoreSection.classList.add('hidden');
+                if (historySection) historySection.classList.remove('hidden');
+                if (newExamModal) newExamModal.classList.remove('hidden');
+            });
         }
     }
 
@@ -379,8 +442,7 @@ window.addEventListener('DOMContentLoaded', function () {
             // Display all answer choices
             answerChoices.forEach((answer, index) => {
                 const answerDiv = document.createElement('div');
-                answerDiv.className = 'p-3 rounded transition-all';
-                answerDiv.style.border = '2px solid';
+                answerDiv.className = 'p-3 rounded transition-all border-2';
                 
                 const isCorrect = answer.is_correct;
                 const isUserAnswer = question.user_answer_id === answer.id;
@@ -389,39 +451,27 @@ window.addEventListener('DOMContentLoaded', function () {
                 // Show all answers, but highlight the correct answer and user's selection
                 if (isCorrect && isUserAnswer) {
                     // User selected the correct answer - green with emphasis
-                    answerDiv.style.borderColor = '#16a34a';
-                    answerDiv.style.backgroundColor = '#dcfce7';
-                    answerDiv.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                    answerDiv.classList.add('border-green-600', 'bg-green-100', 'shadow-md');
                 } else if (isCorrect) {
                     // Correct answer (but user didn't select it) - green border
-                    answerDiv.style.borderColor = '#22c55e';
-                    answerDiv.style.backgroundColor = '#f0fdf4';
+                    answerDiv.classList.add('border-green-500', 'bg-green-50');
                 } else if (isUserAnswer) {
                     // User selected this wrong answer - red with emphasis
-                    answerDiv.style.borderColor = '#dc2626';
-                    answerDiv.style.backgroundColor = '#fee2e2';
-                    answerDiv.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                    answerDiv.classList.add('border-red-600', 'bg-red-100', 'shadow-md');
                 } else {
                     // Other answer choices - neutral
-                    answerDiv.style.borderColor = '#d1d5db';
-                    answerDiv.style.backgroundColor = '#f9fafb';
+                    answerDiv.classList.add('border-gray-300', 'bg-gray-50');
                 }
                 
                 const answerLabel = document.createElement('div');
                 answerLabel.className = 'flex items-start';
-                answerLabel.style.display = 'flex';
-                answerLabel.style.alignItems = 'flex-start';
                 
                 const labelText = document.createElement('span');
-                labelText.className = 'font-semibold mr-2';
-                labelText.style.fontWeight = '600';
-                labelText.style.marginRight = '0.5rem';
-                labelText.style.minWidth = '1.5rem';
+                labelText.className = 'font-semibold mr-2 min-w-[1.5rem]';
                 labelText.textContent = String.fromCharCode(65 + index) + '.';
                 
                 const answerText = document.createElement('span');
                 answerText.className = 'flex-1';
-                answerText.style.flex = '1';
                 answerText.textContent = answer.answer_text || answer.text;
                 
                 answerLabel.appendChild(labelText);
@@ -429,39 +479,18 @@ window.addEventListener('DOMContentLoaded', function () {
                 
                 // Add indicators for correct answer and user selection
                 const indicators = document.createElement('div');
-                indicators.className = 'mt-2 flex flex-wrap gap-2';
-                indicators.style.marginTop = '0.5rem';
-                indicators.style.marginLeft = '1.5rem';
-                indicators.style.display = 'flex';
-                indicators.style.flexWrap = 'wrap';
-                indicators.style.gap = '0.5rem';
+                indicators.className = 'mt-2 ml-[1.5rem] flex flex-wrap gap-2';
                 
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
-                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
-                    correctBadge.style.display = 'inline-flex';
-                    correctBadge.style.alignItems = 'center';
-                    correctBadge.style.padding = '0.25rem 0.625rem';
-                    correctBadge.style.backgroundColor = '#16a34a';
-                    correctBadge.style.color = 'white';
-                    correctBadge.style.borderRadius = '0.25rem';
-                    correctBadge.style.fontSize = '0.75rem';
-                    correctBadge.style.fontWeight = '600';
+                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
                 
                 if (isUserAnswer) {
                     const yourAnswerBadge = document.createElement('span');
-                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
-                    yourAnswerBadge.style.display = 'inline-flex';
-                    yourAnswerBadge.style.alignItems = 'center';
-                    yourAnswerBadge.style.padding = '0.25rem 0.625rem';
-                    yourAnswerBadge.style.backgroundColor = isCorrect ? '#2563eb' : '#dc2626';
-                    yourAnswerBadge.style.color = 'white';
-                    yourAnswerBadge.style.borderRadius = '0.25rem';
-                    yourAnswerBadge.style.fontSize = '0.75rem';
-                    yourAnswerBadge.style.fontWeight = '600';
+                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-blue-600' : 'bg-red-600');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
@@ -473,69 +502,6 @@ window.addEventListener('DOMContentLoaded', function () {
                 
                 answersContainer.appendChild(answerDiv);
             });
-        }
-
-        // Display result indicator
-        const resultIndicator = document.querySelector('#result-indicator');
-        const resultIcon = document.querySelector('#result-icon');
-        const resultText = document.querySelector('#result-text');
-        const resultDetail = document.querySelector('#result-detail');
-
-        if (resultIndicator && resultIcon && resultText) {
-            const answerChoices = question.answer_choices;
-            const isCorrect = answerChoices && answerChoices.some(a => a.is_correct && a.id === question.user_answer_id);
-            
-            // Reset classes and show the indicator
-            resultIndicator.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'border-green-500', 'border-red-500');
-            resultIndicator.style.display = 'block';
-            
-            if (isCorrect) {
-                // User answered correctly
-                resultIndicator.style.backgroundColor = '#f0fdf4';
-                resultIndicator.style.borderLeft = '4px solid #22c55e';
-                resultIndicator.style.padding = '1rem';
-                resultIndicator.style.borderRadius = '0.5rem';
-                
-                resultIcon.textContent = '✓';
-                resultIcon.style.fontSize = '1.875rem';
-                resultIcon.style.marginRight = '0.75rem';
-                resultIcon.style.color = '#16a34a';
-                
-                resultText.textContent = 'Correct!';
-                resultText.style.fontSize = '1.25rem';
-                resultText.style.fontWeight = '700';
-                resultText.style.color = '#166534';
-                
-                if (resultDetail) {
-                    resultDetail.textContent = 'You answered this question correctly.';
-                    resultDetail.style.fontSize = '0.875rem';
-                    resultDetail.style.marginTop = '0.25rem';
-                    resultDetail.style.color = '#15803d';
-                }
-            } else {
-                // User answered incorrectly
-                resultIndicator.style.backgroundColor = '#fef2f2';
-                resultIndicator.style.borderLeft = '4px solid #ef4444';
-                resultIndicator.style.padding = '1rem';
-                resultIndicator.style.borderRadius = '0.5rem';
-                
-                resultIcon.textContent = '✗';
-                resultIcon.style.fontSize = '1.875rem';
-                resultIcon.style.marginRight = '0.75rem';
-                resultIcon.style.color = '#dc2626';
-                
-                resultText.textContent = 'Incorrect';
-                resultText.style.fontSize = '1.25rem';
-                resultText.style.fontWeight = '700';
-                resultText.style.color = '#991b1b';
-                
-                if (resultDetail) {
-                    resultDetail.textContent = 'Review the explanation below to understand the correct answer.';
-                    resultDetail.style.fontSize = '0.875rem';
-                    resultDetail.style.marginTop = '0.25rem';
-                    resultDetail.style.color = '#b91c1c';
-                }
-            }
         }
 
         // Display explanation
@@ -588,11 +554,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     video.controls = true;
                     video.controlsList = 'nodownload';
                     video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    video.style.maxWidth = '100%';
-                    video.style.height = 'auto';
-                    video.style.borderRadius = '0.5rem';
-                    video.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-                    video.style.marginBottom = '1rem';
                     
                     // Handle video load error
                     video.onerror = function() {
@@ -609,11 +570,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     img.src = url;
                     img.alt = 'Question image';
                     img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.borderRadius = '0.5rem';
-                    img.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-                    img.style.marginBottom = '1rem';
                     
                     // Handle image load error
                     img.onerror = function() {
@@ -645,6 +601,21 @@ window.addEventListener('DOMContentLoaded', function () {
         const questionDisplay = document.querySelector('#question-display-taker');
 
         if (!takerSection) return;
+
+        // Reset all state when opening a new exam
+        currentExamTakerData = null;
+        currentQuestionTakerIndex = 0;
+        selectedAnswerId = null;
+        hasCheckedAnswer = false;
+        isSubmitting = false;
+
+        // Reset submit button state
+        const submitBtn = document.querySelector('#submit-exam-btn');
+        if (submitBtn) {
+            submitBtn.classList.add('hidden');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Exam';
+        }
 
         // Hide history and show taker with loading state
         if (historySection) historySection.classList.add('hidden');
@@ -794,13 +765,10 @@ window.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Show/hide result and explanation based on whether answer was checked
-        const resultIndicator = document.querySelector('#result-indicator-taker');
+        // Show/hide explanation based on whether answer was checked
         const explanationSection = document.querySelector('#explanation-section-taker');
         
         if (hasCheckedAnswer) {
-            displayResultTaker(question);
-            if (resultIndicator) resultIndicator.classList.remove('hidden');
             if (explanationSection) {
                 explanationSection.classList.remove('hidden');
                 const explanationText = document.querySelector('#explanation-text-taker');
@@ -809,7 +777,6 @@ window.addEventListener('DOMContentLoaded', function () {
                 }
             }
         } else {
-            if (resultIndicator) resultIndicator.classList.add('hidden');
             if (explanationSection) explanationSection.classList.add('hidden');
         }
 
@@ -830,9 +797,10 @@ window.addEventListener('DOMContentLoaded', function () {
         
         answerChoices.forEach((answer, index) => {
             const answerDiv = document.createElement('div');
-            answerDiv.className = 'p-3 rounded transition-all cursor-pointer';
-            answerDiv.style.border = '2px solid';
-            answerDiv.style.cursor = hasCheckedAnswer ? 'default' : 'pointer';
+            answerDiv.className = 'p-3 rounded transition-all border-2';
+            if (!hasCheckedAnswer) {
+                answerDiv.classList.add('cursor-pointer');
+            }
             
             const isSelected = selectedAnswerId === answer.id;
             const isCorrect = answer.is_correct;
@@ -841,26 +809,20 @@ window.addEventListener('DOMContentLoaded', function () {
             if (hasCheckedAnswer) {
                 // Show correct/incorrect after checking
                 if (isCorrect && isSelected) {
-                    answerDiv.style.borderColor = '#16a34a';
-                    answerDiv.style.backgroundColor = '#dcfce7';
+                    answerDiv.classList.add('border-green-600', 'bg-green-100');
                 } else if (isCorrect) {
-                    answerDiv.style.borderColor = '#22c55e';
-                    answerDiv.style.backgroundColor = '#f0fdf4';
+                    answerDiv.classList.add('border-green-500', 'bg-green-50');
                 } else if (isSelected) {
-                    answerDiv.style.borderColor = '#dc2626';
-                    answerDiv.style.backgroundColor = '#fee2e2';
+                    answerDiv.classList.add('border-red-600', 'bg-red-100');
                 } else {
-                    answerDiv.style.borderColor = '#d1d5db';
-                    answerDiv.style.backgroundColor = '#f9fafb';
+                    answerDiv.classList.add('border-gray-300', 'bg-gray-50');
                 }
             } else {
                 // Show selected state before checking
                 if (isSelected) {
-                    answerDiv.style.borderColor = '#2563eb';
-                    answerDiv.style.backgroundColor = '#dbeafe';
+                    answerDiv.classList.add('border-blue-600', 'bg-blue-100');
                 } else {
-                    answerDiv.style.borderColor = '#d1d5db';
-                    answerDiv.style.backgroundColor = '#ffffff';
+                    answerDiv.classList.add('border-gray-300', 'bg-white');
                 }
             }
             
@@ -868,10 +830,7 @@ window.addEventListener('DOMContentLoaded', function () {
             answerLabel.className = 'flex items-start';
             
             const labelText = document.createElement('span');
-            labelText.className = 'font-semibold mr-2';
-            labelText.style.fontWeight = '600';
-            labelText.style.marginRight = '0.5rem';
-            labelText.style.minWidth = '1.5rem';
+            labelText.className = 'font-semibold mr-2 min-w-[1.5rem]';
             labelText.textContent = String.fromCharCode(65 + index) + '.';
             
             const answerText = document.createElement('span');
@@ -884,31 +843,18 @@ window.addEventListener('DOMContentLoaded', function () {
             // Add indicators if answer has been checked
             if (hasCheckedAnswer) {
                 const indicators = document.createElement('div');
-                indicators.className = 'mt-2 flex flex-wrap gap-2';
-                indicators.style.marginTop = '0.5rem';
-                indicators.style.marginLeft = '1.5rem';
-                indicators.style.display = 'flex';
-                indicators.style.flexWrap = 'wrap';
-                indicators.style.gap = '0.5rem';
+                indicators.className = 'mt-2 ml-[1.5rem] flex flex-wrap gap-2';
                 
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
-                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
-                    correctBadge.style.backgroundColor = '#16a34a';
-                    correctBadge.style.color = 'white';
-                    correctBadge.style.borderRadius = '0.25rem';
-                    correctBadge.style.fontSize = '0.75rem';
+                    correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-green-600 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
                 
                 if (isSelected) {
                     const yourAnswerBadge = document.createElement('span');
-                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded';
-                    yourAnswerBadge.style.backgroundColor = isCorrect ? '#2563eb' : '#dc2626';
-                    yourAnswerBadge.style.color = 'white';
-                    yourAnswerBadge.style.borderRadius = '0.25rem';
-                    yourAnswerBadge.style.fontSize = '0.75rem';
+                    yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-blue-600' : 'bg-red-600');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
@@ -974,77 +920,8 @@ window.addEventListener('DOMContentLoaded', function () {
             checkBtn.classList.add('hidden');
         }
         
-        // Show result indicator
-        const resultIndicator = document.querySelector('#result-indicator-taker');
-        if (resultIndicator) {
-            resultIndicator.classList.remove('hidden');
-        }
-        
         // Check if all questions are answered and update submit button visibility
         updateSubmitButtonVisibility();
-    }
-
-    /**
-     * Display result indicator in taker mode
-     */
-    function displayResultTaker(question) {
-        const resultIndicator = document.querySelector('#result-indicator-taker');
-        const resultIcon = document.querySelector('#result-icon-taker');
-        const resultText = document.querySelector('#result-text-taker');
-        const resultDetail = document.querySelector('#result-detail-taker');
-
-        if (!resultIndicator || !resultIcon || !resultText) return;
-
-        const answerChoices = question.answer_choices;
-        const isCorrect = answerChoices && answerChoices.some(a => a.is_correct && a.id === question.user_answer_id);
-        
-        resultIndicator.classList.remove('hidden');
-        
-        if (isCorrect) {
-            resultIndicator.style.backgroundColor = '#f0fdf4';
-            resultIndicator.style.borderLeft = '4px solid #22c55e';
-            resultIndicator.style.padding = '1rem';
-            resultIndicator.style.borderRadius = '0.5rem';
-            
-            resultIcon.textContent = '✓';
-            resultIcon.style.fontSize = '1.875rem';
-            resultIcon.style.marginRight = '0.75rem';
-            resultIcon.style.color = '#16a34a';
-            
-            resultText.textContent = 'Correct!';
-            resultText.style.fontSize = '1.25rem';
-            resultText.style.fontWeight = '700';
-            resultText.style.color = '#166534';
-            
-            if (resultDetail) {
-                resultDetail.textContent = 'Great job! You answered this question correctly.';
-                resultDetail.style.fontSize = '0.875rem';
-                resultDetail.style.marginTop = '0.25rem';
-                resultDetail.style.color = '#15803d';
-            }
-        } else {
-            resultIndicator.style.backgroundColor = '#fef2f2';
-            resultIndicator.style.borderLeft = '4px solid #ef4444';
-            resultIndicator.style.padding = '1rem';
-            resultIndicator.style.borderRadius = '0.5rem';
-            
-            resultIcon.textContent = '✗';
-            resultIcon.style.fontSize = '1.875rem';
-            resultIcon.style.marginRight = '0.75rem';
-            resultIcon.style.color = '#dc2626';
-            
-            resultText.textContent = 'Incorrect';
-            resultText.style.fontSize = '1.25rem';
-            resultText.style.fontWeight = '700';
-            resultText.style.color = '#991b1b';
-            
-            if (resultDetail) {
-                resultDetail.textContent = 'Review the explanation below to understand the correct answer.';
-                resultDetail.style.fontSize = '0.875rem';
-                resultDetail.style.marginTop = '0.25rem';
-                resultDetail.style.color = '#b91c1c';
-            }
-        }
     }
 
     /**
@@ -1089,11 +966,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     video.controls = true;
                     video.controlsList = 'nodownload';
                     video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    video.style.maxWidth = '100%';
-                    video.style.height = 'auto';
-                    video.style.borderRadius = '0.5rem';
-                    video.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-                    video.style.marginBottom = '1rem';
                     
                     video.onerror = function() {
                         console.error('Failed to load video from URL:', url);
@@ -1107,11 +979,6 @@ window.addEventListener('DOMContentLoaded', function () {
                     img.src = url;
                     img.alt = 'Question image';
                     img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.borderRadius = '0.5rem';
-                    img.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-                    img.style.marginBottom = '1rem';
                     
                     img.onerror = function() {
                         console.error('Failed to load image from URL:', url);
@@ -1160,6 +1027,11 @@ window.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Prevent double submission
+        if (isSubmitting) {
+            return;
+        }
+
         const examId = currentExamTakerData.exam_id;
         
         // Prepare the exam data to send with is_complete set to true
@@ -1180,6 +1052,9 @@ window.addEventListener('DOMContentLoaded', function () {
             submitBtn.textContent = 'Submitting...';
         }
 
+        // Set submitting flag
+        isSubmitting = true;
+
         fetch(`${API_BASE_URL}/api/v1/exams/${examId}`, {
             method: 'PUT',
             headers: {
@@ -1194,9 +1069,10 @@ window.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                alert('Exam submitted successfully!');
-                // Close the exam taker and return to history
-                closeExamTaker();
+                // Show score report instead of just an alert
+                showScoreReport(currentExamTakerData, data);
+                // Reset submitting flag after showing score
+                isSubmitting = false;
             })
             .catch(error => {
                 console.error('Error submitting exam:', error);
@@ -1206,7 +1082,56 @@ window.addEventListener('DOMContentLoaded', function () {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Submit Exam';
                 }
+                // Reset submitting flag
+                isSubmitting = false;
             });
+    }
+
+    /**
+     * Show score report after exam submission
+     */
+    function showScoreReport(examData, submittedData) {
+        if (!examData || !examData.questions) return;
+
+        // Use score data from API response
+        const totalQuestions = examData.questions.length;
+        const percentage = submittedData.score || 0;
+        const correctAnswers = Math.round((percentage / 100) * totalQuestions);
+        const incorrectAnswers = totalQuestions - correctAnswers;
+
+        // Update score display
+        document.getElementById('final-score-percentage').textContent = `${percentage}%`;
+        document.getElementById('final-score-text').textContent = `${correctAnswers} / ${totalQuestions} Correct`;
+        document.getElementById('correct-count').textContent = correctAnswers;
+        document.getElementById('incorrect-count').textContent = incorrectAnswers;
+
+        // Show performance message
+        const performanceMsg = document.getElementById('performance-message');
+        const performanceMsgText = performanceMsg.querySelector('p');
+        
+        if (percentage >= 90) {
+            performanceMsg.className = 'text-center mb-8 p-4 rounded-lg bg-green-50 border border-green-200';
+            performanceMsgText.textContent = 'Excellent work! You have a strong understanding of the material.';
+            performanceMsgText.className = 'text-lg font-semibold text-green-800';
+        } else if (percentage >= 70) {
+            performanceMsg.className = 'text-center mb-8 p-4 rounded-lg bg-blue-50 border border-blue-200';
+            performanceMsgText.textContent = 'Good job! Keep practicing to improve further.';
+            performanceMsgText.className = 'text-lg font-semibold text-blue-800';
+        } else {
+            performanceMsg.className = 'text-center mb-8 p-4 rounded-lg bg-yellow-50 border border-yellow-200';
+            performanceMsgText.textContent = 'Keep studying! Review the explanations to strengthen your knowledge.';
+            performanceMsgText.className = 'text-lg font-semibold text-yellow-800';
+        }
+
+        // Hide exam taker section and show score report
+        const takerSection = document.querySelector('#exam-taker-section');
+        const scoreSection = document.querySelector('#score-report-section');
+        
+        if (takerSection) takerSection.classList.add('hidden');
+        if (scoreSection) scoreSection.classList.remove('hidden');
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     /**

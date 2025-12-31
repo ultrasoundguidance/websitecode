@@ -5,7 +5,7 @@ plugins: [
 	require('@tailwindcss/typography'),
 	require('@tailwindcss/forms'),
   ],
-  content: ['./*.hbs', './partials/**/*.hbs'],
+  content: ['./*.hbs', './partials/**/*.hbs', './assets/js/**/*.js'],
   darkMode: 'class',
   theme: {
 	fontFamily: {

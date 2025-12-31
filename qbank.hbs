@@ -134,6 +134,48 @@
             </div>
         </div>
 
+        <!-- Score Report Section -->
+        <div id="score-report-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Exam Complete!</h2>
+                <div class="inline-block p-8 bg-blue-50 rounded-lg border-2 border-blue-500">
+                    <div class="text-6xl font-bold text-blue-600 mb-2" id="final-score-percentage">0%</div>
+                    <div class="text-xl text-gray-700 mb-4" id="final-score-text">0 / 0 Correct</div>
+                    <div class="flex justify-center gap-8 mt-4">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-600" id="correct-count">0</div>
+                            <div class="text-sm text-gray-600">Correct</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-red-600" id="incorrect-count">0</div>
+                            <div class="text-sm text-gray-600">Incorrect</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Message -->
+            <div id="performance-message" class="text-center mb-8 p-4 rounded-lg">
+                <p class="text-lg font-semibold"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button id="review-exam-btn"
+                    class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Review Exam
+                </button>
+                <button id="back-to-history-score"
+                    class="px-8 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                    Exam History
+                </button>
+                <button id="create-new-exam-score"
+                    class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    Create New Exam
+                </button>
+            </div>
+        </div>
+
         <!-- Exam Viewer Section -->
         <div id="exam-viewer-section" class="mb-8 p-6 border border-gray-300 rounded-lg bg-white shadow-sm hidden">
             <div class="mb-6">
@@ -267,24 +309,26 @@
                             </label>
                             <div class="space-y-2">
                                 <div class="flex items-center">
-                                    <input type="radio" id="selection-all" name="questionSelection" value="all" checked
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                    <label for="selection-all" class="ml-2 text-sm text-gray-700">
-                                        All Questions
+                                    <input type="checkbox" id="selection-unanswered" name="questionSelection"
+                                        value="unanswered" checked
+                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="selection-unanswered" class="ml-2 text-sm text-gray-700">
+                                        Unanswered Questions
                                     </label>
                                 </div>
                                 <div class="flex items-center">
-                                    <input type="radio" id="selection-unused" name="questionSelection" value="unused"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
-                                    <label for="selection-unused" class="ml-2 text-sm text-gray-700">
-                                        Unused Questions Only
-                                    </label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input type="radio" id="selection-missed" name="questionSelection" value="missed"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                                    <input type="checkbox" id="selection-missed" name="questionSelection" value="missed"
+                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                     <label for="selection-missed" class="ml-2 text-sm text-gray-700">
-                                        Missed Questions Only
+                                        Missed Questions
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="selection-correct" name="questionSelection"
+                                        value="correct"
+                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="selection-correct" class="ml-2 text-sm text-gray-700">
+                                        Correct Questions
                                     </label>
                                 </div>
                             </div>
@@ -323,8 +367,20 @@
                             <p class="text-lg font-bold leading-5 mb-2">
                                 <span class="text-2xl font-bold exam-question-count"></span>
                             </p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 exam-tags">
-                            </p>
+                            <div class="exam-tags-container mt-1 hidden">
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    <span class="font-semibold">Categories:</span> <span class="exam-tags"></span>
+                                </p>
+                            </div>
+                            <div class="exam-filters-container mt-1 hidden">
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    <span class="font-semibold">Filters:</span> <span class="exam-filters"></span>
+                                </p>
+                            </div>
+                            <div class="exam-score-display mt-2 hidden">
+                                <span class="text-lg font-semibold text-blue-600">Score: <span
+                                        class="exam-score"></span></span>
+                            </div>
                         </div>
                         <div class="mt-3 flex justify-end gap-2">
                             <button
