@@ -1,8 +1,19 @@
 [
     {
-        "origin": ["http://localhost:2368"],
-        "method": ["GET", "OPTIONS"],
-        "responseHeader": ["Content-Type"],
+        "origin": [
+            "http://localhost:2368",
+            "http://127.0.0.1:2368",
+            "http://localhost:2369",
+            "http://127.0.0.1:2369"
+        ],
+        "method": ["GET", "HEAD", "OPTIONS"],
+        "responseHeader": [
+            "Content-Type",
+            "Content-Length",
+            "Content-Disposition",
+            "x-goog-generation",
+            "x-goog-metageneration"
+        ],
         "maxAgeSeconds": 3600
     }
 ]

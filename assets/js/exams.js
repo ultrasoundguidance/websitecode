@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', function () {
     var postData = document.querySelector("#exam-history");
+    console.log('Im here, check it out')
 
     if (!postData) {
         return;
@@ -22,6 +23,87 @@ window.addEventListener('DOMContentLoaded', function () {
     let selectedAnswerId = null;
     let hasCheckedAnswer = false;
     let isSubmitting = false;
+
+    function detectMediaKind(question, url, storagePath) {
+        const contentType = (question.media_content_type || '').toLowerCase();
+        const urlPath = (url || '').toLowerCase();
+        const storagePathLower = (storagePath || '').toLowerCase();
+
+        const isImageType = ['image/png', 'image/jpeg', 'image/jpg'].includes(contentType);
+        const isVideoType = ['video/mp4', 'video/quicktime', 'video/x-quicktime'].includes(contentType);
+        const isPdfType = contentType === 'application/pdf';
+
+        if (isImageType) return 'image';
+        if (isVideoType) return 'video';
+        if (isPdfType) return 'pdf';
+
+        if (/\.(png|jpe?g)(\?|$)/.test(urlPath) || /\.(png|jpe?g)(\?|$)/.test(storagePathLower)) {
+            return 'image';
+        }
+
+        if (/\.(mp4|mov)(\?|$)/.test(urlPath) || /\.(mp4|mov)(\?|$)/.test(storagePathLower)) {
+            return 'video';
+        }
+
+        if (/\.pdf(\?|$)/.test(urlPath) || /\.pdf(\?|$)/.test(storagePathLower)) {
+            return 'pdf';
+        }
+
+        if (contentType.startsWith('image/')) return 'image';
+        if (contentType.startsWith('video/')) return 'video';
+
+        return 'unknown';
+    }
+
+    function renderQuestionMedia(mediaContainer, mediaKind, url) {
+        mediaContainer.innerHTML = '';
+
+        if (mediaKind === 'video') {
+            const video = document.createElement('video');
+            video.src = url;
+            video.controls = true;
+            video.controlsList = 'nodownload';
+            video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
+            video.onerror = function () {
+                console.error('Failed to load video from URL:', url);
+                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display video</span></div>';
+            };
+            mediaContainer.appendChild(video);
+            return;
+        }
+
+        if (mediaKind === 'pdf') {
+            const pdfWrapper = document.createElement('div');
+            pdfWrapper.className = 'w-full mb-4';
+
+            const embed = document.createElement('iframe');
+            embed.src = url;
+            embed.className = 'w-full h-[70vh] rounded-lg shadow-md border border-gray-300 dark:border-gray-700';
+            embed.title = 'Question PDF';
+
+            const fallbackLink = document.createElement('a');
+            fallbackLink.href = url;
+            fallbackLink.target = '_blank';
+            fallbackLink.rel = 'noopener noreferrer';
+            fallbackLink.className = 'inline-block mt-2 text-primary-600 dark:text-primary-400 underline';
+            fallbackLink.textContent = 'Open PDF in a new tab';
+
+            pdfWrapper.appendChild(embed);
+            pdfWrapper.appendChild(fallbackLink);
+            mediaContainer.appendChild(pdfWrapper);
+            return;
+        }
+
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Question media';
+        img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
+        img.onerror = function () {
+            console.error('Failed to load image from URL:', url);
+            mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display media</span></div>';
+        };
+        mediaContainer.appendChild(img);
+    }
 
     // Load exam history
     loadExamHistory();
@@ -105,7 +187,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     // Populate the data
                     clone.querySelector('.exam-date').textContent = date;
                     clone.querySelector('.exam-question-count').textContent = questionCount === 1 ? `${questionCount} Question` : `${questionCount} Questions`;
-                    
+
                     // Display tags/categories if available
                     const tagsElement = clone.querySelector('.exam-tags');
                     const tagsContainer = clone.querySelector('.exam-tags-container');
@@ -113,7 +195,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         tagsElement.textContent = tags;
                         tagsContainer.classList.remove('hidden');
                     }
-                    
+
                     // Display filters if available
                     const filtersElement = clone.querySelector('.exam-filters');
                     const filtersContainer = clone.querySelector('.exam-filters-container');
@@ -127,7 +209,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     const statusProgress = clone.querySelector('.exam-status-progress');
                     if (isComplete) {
                         statusComplete.classList.remove('hidden');
-                        
+
                         // Display score for completed exams
                         if (exam.score !== undefined && exam.score !== null) {
                             const scoreDisplay = clone.querySelector('.exam-score-display');
@@ -144,7 +226,7 @@ window.addEventListener('DOMContentLoaded', function () {
                     // Show/hide view and resume buttons based on completion status
                     const viewBtn = clone.querySelector('.view-exam-btn');
                     const resumeBtn = clone.querySelector('.resume-exam-btn');
-                    
+
                     if (isComplete) {
                         viewBtn.classList.remove('hidden');
                         viewBtn.addEventListener('click', function (e) {
@@ -331,7 +413,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (loadingState) loadingState.classList.remove('hidden');
         if (errorState) errorState.classList.add('hidden');
         if (questionDisplay) questionDisplay.classList.add('hidden');
-        
+
         // Scroll to top of page
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -347,7 +429,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 currentExamData = data;
                 currentQuestionIndex = 0;
                 displayQuestion();
-                
+
                 if (loadingState) loadingState.classList.add('hidden');
                 if (questionDisplay) questionDisplay.classList.remove('hidden');
             })
@@ -364,17 +446,17 @@ window.addEventListener('DOMContentLoaded', function () {
     function closeExamViewer() {
         const historySection = document.querySelector('#exam-history-section');
         const viewerSection = document.querySelector('#exam-viewer-section');
-        
+
         if (viewerSection) {
             viewerSection.classList.add('hidden');
         }
         if (historySection) {
             historySection.classList.remove('hidden');
         }
-        
+
         currentExamData = null;
         currentQuestionIndex = 0;
-        
+
         // Scroll to top of page
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -386,7 +468,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (!currentExamData || !currentExamData.questions) return;
 
         currentQuestionIndex += direction;
-        
+
         // Ensure index stays within bounds
         if (currentQuestionIndex < 0) {
             currentQuestionIndex = 0;
@@ -423,6 +505,8 @@ window.addEventListener('DOMContentLoaded', function () {
         }
 
         // Display question text
+        console.log('displaying question')
+
         const questionText = document.querySelector('#question-text');
         if (questionText) {
             questionText.textContent = question.prompt || 'Question text not available';
@@ -435,18 +519,18 @@ window.addEventListener('DOMContentLoaded', function () {
         const answersContainer = document.querySelector('#answer-choices');
         // Support both 'answers' and 'answer_choices' field names from API
         const answerChoices = question.answer_choices;
-        
+
         if (answersContainer && answerChoices) {
             answersContainer.innerHTML = '';
-            
+
             // Display all answer choices
             answerChoices.forEach((answer, index) => {
                 const answerDiv = document.createElement('div');
                 answerDiv.className = 'p-3 rounded transition-all border-2';
-                
+
                 const isCorrect = answer.is_correct;
                 const isUserAnswer = question.user_answer_id === answer.id;
-                
+
                 // Apply styling based on correctness and user selection
                 // Show all answers, but highlight the correct answer and user's selection
                 if (isCorrect && isUserAnswer) {
@@ -462,44 +546,44 @@ window.addEventListener('DOMContentLoaded', function () {
                     // Other answer choices - neutral
                     answerDiv.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-gray-50', 'dark:bg-gray-900');
                 }
-                
+
                 const answerLabel = document.createElement('div');
                 answerLabel.className = 'flex items-start';
-                
+
                 const labelText = document.createElement('span');
                 labelText.className = 'font-semibold mr-2 min-w-[1.5rem] text-gray-800 dark:text-gray-200';
                 labelText.textContent = String.fromCharCode(65 + index) + '.';
-                
+
                 const answerText = document.createElement('span');
                 answerText.className = 'flex-1 text-gray-700 dark:text-gray-300';
                 answerText.textContent = answer.answer_text || answer.text;
-                
+
                 answerLabel.appendChild(labelText);
                 answerLabel.appendChild(answerText);
-                
+
                 // Add indicators for correct answer and user selection
                 const indicators = document.createElement('div');
                 indicators.className = 'mt-2 ml-[1.5rem] flex flex-wrap gap-2';
-                
+
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
                     correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-accent-600 dark:bg-accent-700 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
-                
+
                 if (isUserAnswer) {
                     const yourAnswerBadge = document.createElement('span');
                     yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-primary-600 dark:bg-primary-700' : 'bg-tertiary-600 dark:bg-tertiary-700');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
-                
+
                 answerDiv.appendChild(answerLabel);
                 if (indicators.childNodes.length > 0) {
                     answerDiv.appendChild(indicators);
                 }
-                
+
                 answersContainer.appendChild(answerDiv);
             });
         }
@@ -516,7 +600,7 @@ window.addEventListener('DOMContentLoaded', function () {
      */
     function displayQuestionMedia(question) {
         const mediaContainer = document.querySelector('#question-media');
-        
+
         if (!mediaContainer) {
             console.warn('Media container #question-media not found');
             return;
@@ -525,8 +609,8 @@ window.addEventListener('DOMContentLoaded', function () {
         // Clear previous media
         mediaContainer.innerHTML = '';
 
-        // Check if question has media_storage_path
-        if (!question.media_storage_path) {
+        // Check if question has media_content_type
+        if (!question.media_content_type) {
             mediaContainer.classList.add('hidden');
             return;
         }
@@ -536,57 +620,23 @@ window.addEventListener('DOMContentLoaded', function () {
         mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-gray-500">Loading image...</span></div>';
 
         // Construct the storage path
-        let storagePath = question.media_storage_path;
+        let storagePath = `questions/${question.id}`
+        console.log('storage path: ', storagePath)
 
         // Use Firebase Storage SDK for authenticated access
-        const storageRef = firebase.storage().ref(storagePath);
-        
+        const storageRef = firebaseStorage.ref(storagePath);
+
         // Get download URL with authentication
         storageRef.getDownloadURL()
             .then((url) => {
-                // Determine if this is a video or image
-                const isVideo = storagePath.toLowerCase().endsWith('.mp4') || url.toLowerCase().includes('.mp4');
-                
-                if (isVideo) {
-                    // Create video element
-                    const video = document.createElement('video');
-                    video.src = url;
-                    video.controls = true;
-                    video.controlsList = 'nodownload';
-                    video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    
-                    // Handle video load error
-                    video.onerror = function() {
-                        console.error('Failed to load video from URL:', url);
-                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display video</span></div>';
-                    };
-                    
-                    // Clear loading state and add video
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(video);
-                } else {
-                    // Create image element
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = 'Question image';
-                    img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    
-                    // Handle image load error
-                    img.onerror = function() {
-                        console.error('Failed to load image from URL:', url);
-                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display image</span></div>';
-                    };
-                    
-                    // Clear loading state and add image
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(img);
-                }
+                const mediaKind = detectMediaKind(question, url, storagePath);
+                renderQuestionMedia(mediaContainer, mediaKind, url);
             })
             .catch((error) => {
                 // Handle any errors
                 console.error('Error loading question media:', error);
                 console.error('Storage path attempted:', storagePath);
-                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load image: ' + error.message + '</span></div>';
+                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load media: ' + error.message + '</span></div>';
             });
     }
 
@@ -623,7 +673,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (loadingState) loadingState.classList.remove('hidden');
         if (errorState) errorState.classList.add('hidden');
         if (questionDisplay) questionDisplay.classList.add('hidden');
-        
+
         // Scroll to top of page
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -637,7 +687,7 @@ window.addEventListener('DOMContentLoaded', function () {
             })
             .then(data => {
                 currentExamTakerData = data;
-                
+
                 // Find the first unanswered question or start from beginning
                 currentQuestionTakerIndex = 0;
                 for (let i = 0; i < data.questions.length; i++) {
@@ -646,9 +696,9 @@ window.addEventListener('DOMContentLoaded', function () {
                         break;
                     }
                 }
-                
+
                 displayQuestionTaker();
-                
+
                 if (loadingState) loadingState.classList.add('hidden');
                 if (questionDisplay) questionDisplay.classList.remove('hidden');
             })
@@ -665,22 +715,22 @@ window.addEventListener('DOMContentLoaded', function () {
     function closeExamTaker() {
         const historySection = document.querySelector('#exam-history-section');
         const takerSection = document.querySelector('#exam-taker-section');
-        
+
         if (takerSection) {
             takerSection.classList.add('hidden');
         }
         if (historySection) {
             historySection.classList.remove('hidden');
         }
-        
+
         currentExamTakerData = null;
         currentQuestionTakerIndex = 0;
         selectedAnswerId = null;
         hasCheckedAnswer = false;
-        
+
         // Reload exam history to reflect any changes
         loadExamHistory();
-        
+
         // Scroll to top of page
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -693,9 +743,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
         // Only allow navigation if current question has been answered
         const currentQuestion = currentExamTakerData.questions[currentQuestionTakerIndex];
-        
+
         currentQuestionTakerIndex += direction;
-        
+
         // Ensure index stays within bounds
         if (currentQuestionTakerIndex < 0) {
             currentQuestionTakerIndex = 0;
@@ -758,7 +808,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (checkBtn) {
             // Clear any inline styles from previous questions
             checkBtn.style.display = '';
-            
+
             if (hasCheckedAnswer) {
                 // Keep button hidden once answer is checked
                 checkBtn.classList.add('hidden');
@@ -775,7 +825,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         // Show/hide explanation based on whether answer was checked
         const explanationSection = document.querySelector('#explanation-section-taker');
-        
+
         if (hasCheckedAnswer) {
             if (explanationSection) {
                 explanationSection.classList.remove('hidden');
@@ -792,11 +842,11 @@ window.addEventListener('DOMContentLoaded', function () {
         const resultIndicator = document.querySelector('#result-indicator-taker');
         const resultIcon = document.querySelector('#result-icon-taker');
         const resultText = document.querySelector('#result-text-taker');
-        
+
         if (hasCheckedAnswer && resultIndicator && resultIcon && resultText) {
             // Show result indicator with appropriate styling
             const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
-            
+
             resultIndicator.classList.remove('hidden');
             if (isCorrect) {
                 resultIndicator.className = 'mb-6 p-4 rounded-lg bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 border border-accent-600 dark:border-accent-500';
@@ -826,21 +876,21 @@ window.addEventListener('DOMContentLoaded', function () {
     function displayAnswerChoicesTaker(question) {
         const answersContainer = document.querySelector('#answer-choices-taker');
         const answerChoices = question.answer_choices;
-        
+
         if (!answersContainer || !answerChoices) return;
-        
+
         answersContainer.innerHTML = '';
-        
+
         answerChoices.forEach((answer, index) => {
             const answerDiv = document.createElement('div');
             answerDiv.className = 'p-3 rounded transition-all border-2';
             if (!hasCheckedAnswer) {
                 answerDiv.classList.add('cursor-pointer');
             }
-            
+
             const isSelected = selectedAnswerId === answer.id;
             const isCorrect = answer.is_correct;
-            
+
             // Apply styling based on selection and check status
             if (hasCheckedAnswer) {
                 // Show correct/incorrect after checking
@@ -861,40 +911,40 @@ window.addEventListener('DOMContentLoaded', function () {
                     answerDiv.classList.add('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-900', 'hover:border-primary-400', 'dark:hover:border-primary-600', 'hover:bg-gray-50', 'dark:hover:bg-gray-800');
                 }
             }
-            
+
             const answerLabel = document.createElement('div');
             answerLabel.className = 'flex items-start';
-            
+
             const labelText = document.createElement('span');
             labelText.className = 'font-semibold mr-2 min-w-[1.5rem] text-gray-800 dark:text-gray-200';
             labelText.textContent = String.fromCharCode(65 + index) + '.';
-            
+
             const answerText = document.createElement('span');
             answerText.className = 'flex-1 text-gray-700 dark:text-gray-300';
             answerText.textContent = answer.answer_text || answer.text;
-            
+
             answerLabel.appendChild(labelText);
             answerLabel.appendChild(answerText);
-            
+
             // Add indicators if answer has been checked
             if (hasCheckedAnswer) {
                 const indicators = document.createElement('div');
                 indicators.className = 'mt-2 ml-[1.5rem] flex flex-wrap gap-2';
-                
+
                 if (isCorrect) {
                     const correctBadge = document.createElement('span');
                     correctBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded bg-accent-600 dark:bg-accent-700 text-white';
                     correctBadge.textContent = '✓ Correct Answer';
                     indicators.appendChild(correctBadge);
                 }
-                
+
                 if (isSelected) {
                     const yourAnswerBadge = document.createElement('span');
                     yourAnswerBadge.className = 'inline-flex items-center px-2 py-1 text-xs font-semibold rounded text-white ' + (isCorrect ? 'bg-primary-600 dark:bg-primary-700' : 'bg-tertiary-600 dark:bg-tertiary-700');
                     yourAnswerBadge.textContent = isCorrect ? '✓ Your Answer' : '✗ Your Answer';
                     indicators.appendChild(yourAnswerBadge);
                 }
-                
+
                 answerDiv.appendChild(answerLabel);
                 if (indicators.childNodes.length > 0) {
                     answerDiv.appendChild(indicators);
@@ -902,18 +952,18 @@ window.addEventListener('DOMContentLoaded', function () {
             } else {
                 answerDiv.appendChild(answerLabel);
             }
-            
+
             // Add click handler if answer hasn't been checked yet
             if (!hasCheckedAnswer) {
-                answerDiv.addEventListener('click', function() {
+                answerDiv.addEventListener('click', function () {
                     selectedAnswerId = answer.id;
                     displayAnswerChoicesTaker(question);
                 });
             }
-            
+
             answersContainer.appendChild(answerDiv);
         });
-        
+
         // Update check button visibility after rendering all answers
         const checkBtn = document.querySelector('#check-answer-btn');
         if (checkBtn && !hasCheckedAnswer) {
@@ -933,26 +983,26 @@ window.addEventListener('DOMContentLoaded', function () {
         if (!selectedAnswerId || !currentExamTakerData || hasCheckedAnswer) return;
 
         const question = currentExamTakerData.questions[currentQuestionTakerIndex];
-        
+
         // Mark as checked
         hasCheckedAnswer = true;
-        
+
         // Update the question with user's answer
         question.user_answer_id = selectedAnswerId;
-        
+
         // Permanently hide check button immediately
         const checkBtn = document.querySelector('#check-answer-btn');
         if (checkBtn) {
             checkBtn.classList.add('hidden');
             checkBtn.style.display = 'none'; // Force hide with inline style
         }
-        
+
         // Save exam progress to API
         saveExamProgress();
-        
+
         // Update display to show result
         displayAnswerChoicesTaker(question);
-        
+
         // Show explanation
         const explanationSection = document.querySelector('#explanation-section-taker');
         const explanationText = document.querySelector('#explanation-text-taker');
@@ -960,15 +1010,15 @@ window.addEventListener('DOMContentLoaded', function () {
             explanationSection.classList.remove('hidden');
             explanationText.textContent = question.explanation || 'No explanation available for this question.';
         }
-        
+
         // Display result indicator
         const resultIndicator = document.querySelector('#result-indicator-taker');
         const resultIcon = document.querySelector('#result-icon-taker');
         const resultText = document.querySelector('#result-text-taker');
-        
+
         if (resultIndicator && resultIcon && resultText) {
             const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
-            
+
             resultIndicator.classList.remove('hidden');
             if (isCorrect) {
                 resultIndicator.className = 'mb-6 p-4 rounded-lg bg-accent-100 dark:bg-accent-900 dark:bg-opacity-20 border border-accent-600 dark:border-accent-500';
@@ -984,7 +1034,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 resultText.className = 'text-xl font-bold text-tertiary-900 dark:text-tertiary-300';
             }
         }
-        
+
         // Update submit button visibility - show if this was the last question answered
         updateSubmitButtonVisibility();
     }
@@ -994,7 +1044,7 @@ window.addEventListener('DOMContentLoaded', function () {
      */
     function displayQuestionMediaTaker(question) {
         const mediaContainer = document.querySelector('#question-media-taker');
-        
+
         if (!mediaContainer) {
             console.warn('Media container #question-media-taker not found');
             return;
@@ -1003,8 +1053,8 @@ window.addEventListener('DOMContentLoaded', function () {
         // Clear previous media
         mediaContainer.innerHTML = '';
 
-        // Check if question has media_storage_path
-        if (!question.media_storage_path) {
+        // Check if question has media_content_type
+        if (!question.media_content_type) {
             mediaContainer.classList.add('hidden');
             return;
         }
@@ -1014,50 +1064,21 @@ window.addEventListener('DOMContentLoaded', function () {
         mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-gray-500">Loading image...</span></div>';
 
         // Construct the storage path
-        let storagePath = question.media_storage_path;
+        let storagePath = `questions/${question.id}`
 
         // Use Firebase Storage SDK for authenticated access
-        const storageRef = firebase.storage().ref(storagePath);
-        
+        const storageRef = firebaseStorage.ref(storagePath);
+
         // Get download URL with authentication
         storageRef.getDownloadURL()
             .then((url) => {
-                // Determine if this is a video or image
-                const isVideo = storagePath.toLowerCase().endsWith('.mp4') || url.toLowerCase().includes('.mp4');
-                
-                if (isVideo) {
-                    const video = document.createElement('video');
-                    video.src = url;
-                    video.controls = true;
-                    video.controlsList = 'nodownload';
-                    video.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    
-                    video.onerror = function() {
-                        console.error('Failed to load video from URL:', url);
-                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display video</span></div>';
-                    };
-                    
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(video);
-                } else {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = 'Question image';
-                    img.className = 'max-w-full h-auto rounded-lg shadow-md mb-4';
-                    
-                    img.onerror = function() {
-                        console.error('Failed to load image from URL:', url);
-                        mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to display image</span></div>';
-                    };
-                    
-                    mediaContainer.innerHTML = '';
-                    mediaContainer.appendChild(img);
-                }
+                const mediaKind = detectMediaKind(question, url, storagePath);
+                renderQuestionMedia(mediaContainer, mediaKind, url);
             })
             .catch((error) => {
                 console.error('Error loading question media:', error);
                 console.error('Storage path attempted:', storagePath);
-                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load image: ' + error.message + '</span></div>';
+                mediaContainer.innerHTML = '<div class="text-center py-4"><span class="text-red-500">Failed to load media: ' + error.message + '</span></div>';
             });
     }
 
@@ -1098,7 +1119,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
 
         const examId = currentExamTakerData.exam_id;
-        
+
         // Prepare the exam data to send with is_complete set to true
         const examData = {
             questions: currentExamTakerData.questions
@@ -1173,7 +1194,7 @@ window.addEventListener('DOMContentLoaded', function () {
         // Show performance message
         const performanceMsg = document.getElementById('performance-message');
         const performanceMsgText = performanceMsg.querySelector('p');
-        
+
         if (percentage >= 90) {
             performanceMsg.className = 'text-center mb-8 p-4 rounded-lg bg-green-50 border border-green-200';
             performanceMsgText.textContent = 'Excellent work! You have a strong understanding of the material.';
@@ -1191,7 +1212,7 @@ window.addEventListener('DOMContentLoaded', function () {
         // Hide exam taker section and show score report
         const takerSection = document.querySelector('#exam-taker-section');
         const scoreSection = document.querySelector('#score-report-section');
-        
+
         if (takerSection) takerSection.classList.add('hidden');
         if (scoreSection) scoreSection.classList.remove('hidden');
 
@@ -1206,7 +1227,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (!currentExamTakerData) return;
 
         const examId = currentExamTakerData.exam_id;
-        
+
         // Prepare the exam data to send
         const examData = {
             questions: currentExamTakerData.questions

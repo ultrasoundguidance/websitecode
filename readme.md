@@ -3,7 +3,7 @@ A theme for Ghost.
 Designed by [a human online](https://ahuman.online), made for [Ultrasound Guidance](https://www.ultrasoundguidance.com).
 
 ## Running Ghost website locally
-1. Install Ghost server locally by following these [instructions](https://ghost.org/tutorials/local-ghost/) and start the server with `ghost start`.
+1. Install Ghost server locally by following these [instructions](https://ghost.org/tutorials/local-ghost/) and start the server with `ghost start` and go to http://localhost:2368.
     - Setup [Stripe webhook](https://ghost.org/docs/webhooks/#stripe-webhooks) if testing purchases
 2. To use a custom theme, set it up following these [instructions](https://ghost.org/tutorials/download-and-upload-a-theme/). Once you've set it up, start your development server in the custom theme with `npm run dev`.
 3. Setup Stripe webhooks to work with Stripe locally by following these [instructions](https://ghost.org/docs/webhooks/#stripe-webhooks). Make sure your Local listener webhook in your Stripe account has a status of Listening.

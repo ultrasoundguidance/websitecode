@@ -9,7 +9,7 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.firestore();
-const firebaseStorage = firebase.storage();
+const firebaseStorage = firebase.app().storage('gs://question-bank-media');
 const firebaseAuth = firebase.auth();
 
 // Sign in anonymously to enable authenticated storage access
