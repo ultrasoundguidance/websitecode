@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', function () {
     var postData = document.querySelector("#exam-history");
-    console.log('Im here, check it out')
 
     if (!postData) {
         return;
@@ -158,6 +157,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
                 // Sort exams in descending order (newest first)
                 const sortedExams = data.exams.sort((a, b) => {
+                    const hasStartedA = a.started_at !== null && a.started_at !== undefined && a.started_at !== '';
+                    const hasStartedB = b.started_at !== null && b.started_at !== undefined && b.started_at !== '';
+
+                    // Place exams with empty started_at at the top.
+                    if (!hasStartedA && hasStartedB) return -1;
+                    if (hasStartedA && !hasStartedB) return 1;
+                    if (!hasStartedA && !hasStartedB) return 0;
+
                     const dateA = new Date(a.started_at.endsWith('Z') ? a.started_at : a.started_at + 'Z');
                     const dateB = new Date(b.started_at.endsWith('Z') ? b.started_at : b.started_at + 'Z');
                     return dateB - dateA;
@@ -165,16 +172,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
                 // Process each exam
                 sortedExams.forEach(exam => {
+                    const hasStarted = exam.started_at !== null && exam.started_at !== undefined && exam.started_at !== '';
+
                     // Ensure UTC time is parsed correctly by adding 'Z' if not present
-                    const utcTime = exam.started_at.endsWith('Z') ? exam.started_at : exam.started_at + 'Z';
-                    const date = new Date(utcTime).toLocaleString(undefined, {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true
-                    });
+                    const date = hasStarted
+                        ? new Date(exam.started_at.endsWith('Z') ? exam.started_at : exam.started_at + 'Z').toLocaleString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        })
+                        : 'Not started';
 
                     const tags = exam.tags ? exam.tags.map(value => value.name).join(", ") : '';
                     const filters = exam.filters || '';
@@ -207,6 +217,8 @@ window.addEventListener('DOMContentLoaded', function () {
                     // Set status badge
                     const statusComplete = clone.querySelector('.exam-status-complete');
                     const statusProgress = clone.querySelector('.exam-status-progress');
+                    const statusNotStarted = clone.querySelector('.exam-status-not-started');
+
                     if (isComplete) {
                         statusComplete.classList.remove('hidden');
 
@@ -219,11 +231,13 @@ window.addEventListener('DOMContentLoaded', function () {
                                 scoreDisplay.classList.remove('hidden');
                             }
                         }
+                    } else if (!hasStarted) {
+                        statusNotStarted.classList.remove('hidden');
                     } else {
                         statusProgress.classList.remove('hidden');
                     }
 
-                    // Show/hide view and resume buttons based on completion status
+                    // Show/hide action buttons based on completion and start status
                     const viewBtn = clone.querySelector('.view-exam-btn');
                     const resumeBtn = clone.querySelector('.resume-exam-btn');
 
@@ -234,7 +248,8 @@ window.addEventListener('DOMContentLoaded', function () {
                             openExamViewer(exam.id);
                         });
                     } else {
-                        // Show resume button for in-progress exams
+                        // Use "Start" for not-started exams and "Resume" for in-progress exams.
+                        resumeBtn.textContent = hasStarted ? 'Resume' : 'Start';
                         resumeBtn.classList.remove('hidden');
                         resumeBtn.addEventListener('click', function (e) {
                             e.preventDefault();
@@ -756,6 +771,11 @@ window.addEventListener('DOMContentLoaded', function () {
         displayQuestionTaker();
     }
 
+    function isQuestionRevealed(question) {
+        const revealedAt = question?.revealed_at;
+        return revealedAt !== null && revealedAt !== undefined && String(revealedAt).trim() !== '';
+    }
+
     /**
      * Display the current question in taker mode
      */
@@ -769,11 +789,13 @@ window.addEventListener('DOMContentLoaded', function () {
         selectedAnswerId = null;
         hasCheckedAnswer = false;
 
-        // Check if this question was already answered
+        // Load selected answer if it exists.
         if (question.user_answer_id) {
             selectedAnswerId = question.user_answer_id;
-            hasCheckedAnswer = true;
         }
+
+        // Only lock answer changes after reveal.
+        hasCheckedAnswer = isQuestionRevealed(question);
 
         // Update question number display
         const currentNumEl = document.querySelector('#current-question-num-taker');
@@ -846,6 +868,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (hasCheckedAnswer && resultIndicator && resultIcon && resultText) {
             // Show result indicator with appropriate styling
             const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
+            const resultDetail = document.querySelector('#result-detail-taker');
 
             resultIndicator.classList.remove('hidden');
             if (isCorrect) {
@@ -854,12 +877,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 resultIcon.className = 'text-3xl mr-3 text-accent-600 dark:text-accent-400';
                 resultText.textContent = 'Correct!';
                 resultText.className = 'text-xl font-bold text-accent-900 dark:text-accent-300';
+                if (resultDetail) resultDetail.textContent = 'Answer is locked after reveal.';
             } else {
                 resultIndicator.className = 'mb-6 p-4 rounded-lg bg-tertiary-100 dark:bg-tertiary-900 dark:bg-opacity-20 border border-tertiary-600 dark:border-tertiary-500';
                 resultIcon.textContent = '✗';
                 resultIcon.className = 'text-3xl mr-3 text-tertiary-600 dark:text-tertiary-400';
                 resultText.textContent = 'Incorrect';
                 resultText.className = 'text-xl font-bold text-tertiary-900 dark:text-tertiary-300';
+                if (resultDetail) resultDetail.textContent = 'Answer is locked after reveal.';
             }
         } else if (resultIndicator) {
             // Hide result indicator if question hasn't been checked
@@ -953,13 +978,18 @@ window.addEventListener('DOMContentLoaded', function () {
                 answerDiv.appendChild(answerLabel);
             }
 
-            // Add click handler if answer hasn't been checked yet
-            if (!hasCheckedAnswer) {
-                answerDiv.addEventListener('click', function () {
-                    selectedAnswerId = answer.id;
-                    displayAnswerChoicesTaker(question);
-                });
-            }
+            answerDiv.addEventListener('click', function () {
+                if (hasCheckedAnswer) {
+                    const resultDetail = document.querySelector('#result-detail-taker');
+                    if (resultDetail) {
+                        resultDetail.textContent = 'Answer is locked after reveal.';
+                    }
+                    return;
+                }
+
+                selectedAnswerId = answer.id;
+                displayAnswerChoicesTaker(question);
+            });
 
             answersContainer.appendChild(answerDiv);
         });
@@ -989,6 +1019,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         // Update the question with user's answer
         question.user_answer_id = selectedAnswerId;
+        question.revealed_at = question.revealed_at || new Date().toISOString();
 
         // Permanently hide check button immediately
         const checkBtn = document.querySelector('#check-answer-btn');
@@ -1018,6 +1049,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
         if (resultIndicator && resultIcon && resultText) {
             const isCorrect = question.answer_choices.find(a => a.id === selectedAnswerId)?.is_correct;
+            const resultDetail = document.querySelector('#result-detail-taker');
 
             resultIndicator.classList.remove('hidden');
             if (isCorrect) {
@@ -1026,12 +1058,14 @@ window.addEventListener('DOMContentLoaded', function () {
                 resultIcon.className = 'text-3xl mr-3 text-accent-600 dark:text-accent-400';
                 resultText.textContent = 'Correct!';
                 resultText.className = 'text-xl font-bold text-accent-900 dark:text-accent-300';
+                if (resultDetail) resultDetail.textContent = 'Answer is locked after reveal.';
             } else {
                 resultIndicator.className = 'mb-6 p-4 rounded-lg bg-tertiary-100 dark:bg-tertiary-900 dark:bg-opacity-20 border border-tertiary-600 dark:border-tertiary-500';
                 resultIcon.textContent = '✗';
                 resultIcon.className = 'text-3xl mr-3 text-tertiary-600 dark:text-tertiary-400';
                 resultText.textContent = 'Incorrect';
                 resultText.className = 'text-xl font-bold text-tertiary-900 dark:text-tertiary-300';
+                if (resultDetail) resultDetail.textContent = 'Answer is locked after reveal.';
             }
         }
 
@@ -1105,6 +1139,22 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
+     * Ensure exam has a started_at timestamp before saving/submitting.
+     */
+    function ensureStartedAtTimestamp() {
+        if (!currentExamTakerData) return null;
+
+        const startedAt = currentExamTakerData.started_at;
+        const hasStartedAt = startedAt !== null && startedAt !== undefined && String(startedAt).trim() !== '';
+
+        if (!hasStartedAt) {
+            currentExamTakerData.started_at = new Date().toISOString();
+        }
+
+        return currentExamTakerData.started_at;
+    }
+
+    /**
      * Submit the completed exam
      */
     function submitExam() {
@@ -1119,6 +1169,7 @@ window.addEventListener('DOMContentLoaded', function () {
         }
 
         const examId = currentExamTakerData.exam_id;
+        const startedAt = ensureStartedAtTimestamp();
 
         // Prepare the exam data to send with is_complete set to true
         const examData = {
@@ -1126,9 +1177,11 @@ window.addEventListener('DOMContentLoaded', function () {
                 .filter(q => q.user_answer_id)
                 .map(q => ({
                     question_id: q.id,
-                    answer_id: q.user_answer_id
+                    answer_id: q.user_answer_id,
+                    revealed_at: q.revealed_at || null
                 })),
-            is_complete: true
+            is_complete: true,
+            started_at: startedAt
         };
 
         // Disable submit button to prevent double submission
@@ -1227,6 +1280,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (!currentExamTakerData) return;
 
         const examId = currentExamTakerData.exam_id;
+        const startedAt = ensureStartedAtTimestamp();
 
         // Prepare the exam data to send
         const examData = {
@@ -1234,9 +1288,11 @@ window.addEventListener('DOMContentLoaded', function () {
                 .filter(q => q.user_answer_id)
                 .map(q => ({
                     question_id: q.id,
-                    answer_id: q.user_answer_id
+                    answer_id: q.user_answer_id,
+                    revealed_at: q.revealed_at || null
                 })),
-            is_complete: false
+            is_complete: false,
+            started_at: startedAt
         };
 
         fetch(`${API_BASE_URL}/api/v1/exams/${examId}`, {
@@ -1256,6 +1312,9 @@ window.addEventListener('DOMContentLoaded', function () {
                 // Update local data with response
                 if (data.questions) {
                     currentExamTakerData.questions = data.questions;
+                }
+                if (data.started_at) {
+                    currentExamTakerData.started_at = data.started_at;
                 }
             })
             .catch(error => {
