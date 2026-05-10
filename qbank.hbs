@@ -1,7 +1,7 @@
 {{!< default}} <div
     class="px-4 pt-6 pb-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:pt-0">
     <div class="text-lg max-w-prose mx-auto">
-        {{#if @member}}
+        {{#if @member.email}}
         <h1>
             <span class="mb-6 block text-3xl text-center leading-8 font-extrabold tracking-tight sm:text-4xl">
                 Question Bank
@@ -426,6 +426,39 @@
                 </div>
             </li>
         </template>
+
+        <script>
+            (function () {
+                var WHITELISTED_EMAILS = ['vnikki13@gmail.com', 'alexander.s.dangelo@gmail.com', 'lloyd.alex@gmail.com'];
+                var memberEmail = '{{@member.email}}';
+                var isWhitelisted = WHITELISTED_EMAILS.indexOf(memberEmail.toLowerCase()) !== -1;
+
+                if (!isWhitelisted) {
+                    // Hide the main content
+                    document.querySelectorAll('#exam-history-section, #exam-taker-section, #score-report-section, #exam-viewer-section, #new-exam-modal, h1').forEach(function (el) {
+                        if (el.id && el.id.includes('section') || el.id.includes('modal')) el.style.display = 'none';
+                        else if (el.tagName === 'H1') el.style.display = 'none';
+                    });
+
+                    // Show access denied message
+                    var deniedMsg = document.createElement('div');
+                    deniedMsg.className = 'text-center py-16';
+                    deniedMsg.innerHTML = '<h1 class="mb-4 text-3xl font-extrabold tracking-tight">Access Restricted</h1><p class="text-lg text-gray-600 dark:text-gray-400">This page is currently limited to authorized test accounts.</p>';
+                    var container = document.querySelector('.text-lg.max-w-prose.mx-auto');
+                    if (container) container.appendChild(deniedMsg);
+                }
+            })();
+        </script>
+        {{else}}
+        <div class="text-center py-16">
+            <h1 class="mb-4 text-3xl font-extrabold tracking-tight">Please Log In</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">
+                You need to sign in with an authorized account to access the Question Bank.
+            </p>
+            <a href="#/portal/signin/"
+                class="btn inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide transition duration-200 rounded shadow-md">Log
+                In</a>
+        </div>
         {{/if}}
     </div>
     </div>
