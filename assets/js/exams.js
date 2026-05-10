@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', function () {
     let selectedAnswerId = null;
     let hasCheckedAnswer = false;
     let isSubmitting = false;
+    let saveProgressTimeoutId = null;
 
     function detectMediaKind(question, url, storagePath) {
         const contentType = (question.media_content_type || '').toLowerCase();
@@ -987,8 +988,18 @@ window.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                if (selectedAnswerId === answer.id && question.user_answer_id === answer.id) {
+                    return;
+                }
+
                 selectedAnswerId = answer.id;
+                question.user_answer_id = selectedAnswerId;
+
+                // Persist selection with a short debounce to avoid rapid repeated saves.
+                scheduleSaveExamProgress();
+
                 displayAnswerChoicesTaker(question);
+                updateSubmitButtonVisibility();
             });
 
             answersContainer.appendChild(answerDiv);
@@ -1026,6 +1037,11 @@ window.addEventListener('DOMContentLoaded', function () {
         if (checkBtn) {
             checkBtn.classList.add('hidden');
             checkBtn.style.display = 'none'; // Force hide with inline style
+        }
+
+        if (saveProgressTimeoutId) {
+            clearTimeout(saveProgressTimeoutId);
+            saveProgressTimeoutId = null;
         }
 
         // Save exam progress to API
@@ -1271,6 +1287,17 @@ window.addEventListener('DOMContentLoaded', function () {
 
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scheduleSaveExamProgress() {
+        if (saveProgressTimeoutId) {
+            clearTimeout(saveProgressTimeoutId);
+        }
+
+        saveProgressTimeoutId = setTimeout(() => {
+            saveProgressTimeoutId = null;
+            saveExamProgress();
+        }, 200);
     }
 
     /**
