@@ -1,5 +1,6 @@
 routes:
   /: home
+  /qbank/: qbank
 
 collections:
   /procedures/:

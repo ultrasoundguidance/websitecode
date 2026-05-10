@@ -4,4 +4,4 @@
  */
 
 // API Base URL - change this to point to your API endpoint
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = 'https://backend-947728965057.us-east1.run.app/api/v1';
