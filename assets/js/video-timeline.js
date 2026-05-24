@@ -1,17 +1,26 @@
 window.addEventListener('load', function () {
   const postItem = document.querySelector(".postItem")
 
-  if (postItem) {
+  if (postItem && postItem.dataset.memberEmail) {
     firebaseDB.collection("users").doc(postItem.dataset.memberEmail).get()
       .then((doc) => {
         if (doc.exists) {
 
           const watchedVideosProgress = doc.data().watchedVideosProgress;
-          let videoCount = 1
+          if (!watchedVideosProgress) {
+            return
+          }
+
           Object.entries(watchedVideosProgress).forEach(([key, value]) => {
+            if (!value || typeof value !== "object") {
+              return
+            }
+
+            let videoCount = 1
             if (value.videoCount) {
               videoCount = value.videoCount
             }
+
             let progressPosition = 0
 
             Object.entries(value).forEach(([videoId, value]) => {
@@ -22,6 +31,10 @@ window.addEventListener('load', function () {
             })
 
             var element = document.getElementById(key)
+            if (!element) {
+              return
+            }
+
             element.style.setProperty("--progress-position", progressPosition / videoCount)
           });
 
