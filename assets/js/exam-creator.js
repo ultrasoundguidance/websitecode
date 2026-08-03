@@ -148,7 +148,7 @@ window.addEventListener('DOMContentLoaded', function () {
         form.querySelector('button[type="submit"]').disabled = true;
 
         // Make API call to create exam
-        fetch(`${API_BASE_URL}/api/v1/exams`, {
+        fetch(`${API_BASE_URL}/api/v1/exams/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -157,7 +157,9 @@ window.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const error = new Error(`HTTP error! status: ${response.status}`);
+                    error.status = response.status;
+                    throw error;
                 }
                 return response.json();
             })
@@ -182,7 +184,7 @@ window.addEventListener('DOMContentLoaded', function () {
                         hasId: !!data.exam_id,
                         dataKeys: Object.keys(data)
                     });
-                    
+
                     if (window.loadExamHistory) {
                         // Fallback to reloading exam history if openExamTaker is not available
                         setTimeout(() => {
@@ -195,8 +197,12 @@ window.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => {
-                console.error('Error creating exam:', error);                
-                showMessage('error', 'No questions available. Select different criteria to create an exam');
+                console.error('Error creating exam:', error);
+                if (error.status === 422) {
+                    showMessage('error', 'No questions available. Select different criteria to create an exam.');
+                } else {
+                    showMessage('error', 'An error occurred creating exam. Contact support if error persists.');
+                }
             })
             .finally(() => {
                 form.querySelector('button[type="submit"]').disabled = false;

@@ -260,10 +260,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
                     // Add delete button handler
                     const deleteBtn = clone.querySelector('.delete-exam-btn');
-                    deleteBtn.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        handleDeleteExam(exam.id);
-                    });
+                    if (exam.filters && exam.filters.includes('admin')) {
+                        deleteBtn.classList.add('hidden');
+                    } else {
+                        deleteBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            handleDeleteExam(exam.id);
+                        });
+                    }
 
                     // Append to list
                     examList.appendChild(clone);
